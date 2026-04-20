@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ScaleLink")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+146f2cb725058b49a794c22864c122ceb6bb32a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ScaleLink")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ScaleLink")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
