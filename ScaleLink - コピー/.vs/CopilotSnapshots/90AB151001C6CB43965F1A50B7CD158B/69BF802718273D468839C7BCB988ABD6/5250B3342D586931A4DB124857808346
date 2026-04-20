@@ -1,0 +1,345 @@
+﻿namespace ScaleLink.Dialogs;
+
+partial class SupplierSelectDialog
+{
+    private System.ComponentModel.IContainer components = null;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components != null))
+            components.Dispose();
+        base.Dispose(disposing);
+    }
+
+    private void InitializeComponent()
+    {
+        lblTitle = new Label();
+        pnlFilters = new Panel();
+        txtNameFilter = new TextBox();
+        txtCarNoFilter = new TextBox();
+        dgvSuppliers = new DataGridView();
+        colCode = new DataGridViewTextBoxColumn();
+        colName = new DataGridViewTextBoxColumn();
+        colCarNo = new DataGridViewTextBoxColumn();
+        pnlButtons = new Panel();
+        btnCancel = new Button();
+        btnOk = new Button();
+        pnlWeight = new Panel();
+        btnConfirmWeight = new Button();
+        pnlManualInput = new Panel();
+        btnNumPad = new Button();
+        txtWeightInput = new TextBox();
+        lblManualTitle = new Label();
+        lblWeightStatus = new Label();
+        lblWeightUnit = new Label();
+        lblCurrentWeight = new Label();
+        lblWeightTitle = new Label();
+        pnlFilters.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvSuppliers).BeginInit();
+        pnlButtons.SuspendLayout();
+        pnlWeight.SuspendLayout();
+        pnlManualInput.SuspendLayout();
+        SuspendLayout();
+        // 
+        // lblTitle
+        // 
+        lblTitle.Dock = DockStyle.Top;
+        lblTitle.Font = new Font("メイリオ", 11F);
+        lblTitle.Location = new Point(0, 0);
+        lblTitle.Name = "lblTitle";
+        lblTitle.Size = new Size(560, 36);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "取引先を選択してください";
+        lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // pnlFilters
+        // 
+        pnlFilters.Controls.Add(txtNameFilter);
+        pnlFilters.Controls.Add(txtCarNoFilter);
+        pnlFilters.Dock = DockStyle.Top;
+        pnlFilters.Location = new Point(0, 36);
+        pnlFilters.Name = "pnlFilters";
+        pnlFilters.Size = new Size(560, 32);
+        pnlFilters.TabIndex = 1;
+        // 
+        // txtNameFilter
+        // 
+        txtNameFilter.Font = new Font("メイリオ", 9F);
+        txtNameFilter.Location = new Point(187, 3);
+        txtNameFilter.Name = "txtNameFilter";
+        txtNameFilter.PlaceholderText = "取引先名で検索";
+        txtNameFilter.Size = new Size(184, 25);
+        txtNameFilter.TabIndex = 0;
+        txtNameFilter.TextChanged += txtNameFilter_TextChanged;
+        // 
+        // txtCarNoFilter
+        // 
+        txtCarNoFilter.Font = new Font("メイリオ", 9F);
+        txtCarNoFilter.Location = new Point(375, 3);
+        txtCarNoFilter.Name = "txtCarNoFilter";
+        txtCarNoFilter.PlaceholderText = "車番で検索";
+        txtCarNoFilter.Size = new Size(181, 25);
+        txtCarNoFilter.TabIndex = 1;
+        txtCarNoFilter.TextChanged += txtCarNoFilter_TextChanged;
+        // 
+        // dgvSuppliers
+        // 
+        dgvSuppliers.AllowUserToAddRows = false;
+        dgvSuppliers.AllowUserToDeleteRows = false;
+        dgvSuppliers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        dgvSuppliers.BackgroundColor = Color.White;
+        dgvSuppliers.ColumnHeadersHeight = 36;
+        dgvSuppliers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dgvSuppliers.Columns.AddRange(new DataGridViewColumn[] { colCode, colName, colCarNo });
+        dgvSuppliers.Dock = DockStyle.Fill;
+        dgvSuppliers.Location = new Point(0, 68);
+        dgvSuppliers.MultiSelect = false;
+        dgvSuppliers.Name = "dgvSuppliers";
+        dgvSuppliers.ReadOnly = true;
+        dgvSuppliers.RowHeadersVisible = false;
+        dgvSuppliers.RowTemplate.Height = 36;
+        dgvSuppliers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        dgvSuppliers.Size = new Size(560, 150);
+        dgvSuppliers.TabIndex = 2;
+        dgvSuppliers.CellDoubleClick += dgvSuppliers_CellDoubleClick;
+        dgvSuppliers.ColumnHeaderMouseClick += dgvSuppliers_ColumnHeaderMouseClick;
+        dgvSuppliers.ColumnWidthChanged += dgvSuppliers_ColumnWidthChanged;
+        dgvSuppliers.Scroll += dgvSuppliers_Scroll;
+        // 
+        // colCode
+        // 
+        colCode.HeaderText = "取引先コード";
+        colCode.Name = "colCode";
+        colCode.ReadOnly = true;
+        // 
+        // colName
+        // 
+        colName.HeaderText = "取引先名";
+        colName.Name = "colName";
+        colName.ReadOnly = true;
+        // 
+        // colCarNo
+        // 
+        colCarNo.HeaderText = "車番";
+        colCarNo.Name = "colCarNo";
+        colCarNo.ReadOnly = true;
+        // 
+        // pnlButtons
+        // 
+        pnlButtons.Controls.Add(btnCancel);
+        pnlButtons.Controls.Add(btnOk);
+        pnlButtons.Dock = DockStyle.Bottom;
+        pnlButtons.Location = new Point(0, 428);
+        pnlButtons.Name = "pnlButtons";
+        pnlButtons.Size = new Size(560, 60);
+        pnlButtons.TabIndex = 4;
+        // 
+        // btnCancel
+        // 
+        btnCancel.BackColor = Color.Gray;
+        btnCancel.FlatAppearance.BorderSize = 0;
+        btnCancel.FlatStyle = FlatStyle.Flat;
+        btnCancel.Font = new Font("メイリオ", 12F);
+        btnCancel.ForeColor = Color.White;
+        btnCancel.Location = new Point(300, 5);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new Size(140, 50);
+        btnCancel.TabIndex = 1;
+        btnCancel.Text = "キャンセル";
+        btnCancel.UseVisualStyleBackColor = false;
+        btnCancel.Click += btnCancel_Click;
+        // 
+        // btnOk
+        // 
+        btnOk.BackColor = Color.FromArgb(0, 122, 204);
+        btnOk.FlatAppearance.BorderSize = 0;
+        btnOk.FlatStyle = FlatStyle.Flat;
+        btnOk.Font = new Font("メイリオ", 12F);
+        btnOk.ForeColor = Color.White;
+        btnOk.Location = new Point(120, 5);
+        btnOk.Name = "btnOk";
+        btnOk.Size = new Size(140, 50);
+        btnOk.TabIndex = 0;
+        btnOk.Text = "OK";
+        btnOk.UseVisualStyleBackColor = false;
+        btnOk.Click += btnOk_Click;
+        // 
+        // pnlWeight
+        // 
+        pnlWeight.BackColor = Color.FromArgb(40, 40, 45);
+        pnlWeight.Controls.Add(btnConfirmWeight);
+        pnlWeight.Controls.Add(pnlManualInput);
+        pnlWeight.Controls.Add(lblWeightStatus);
+        pnlWeight.Controls.Add(lblWeightUnit);
+        pnlWeight.Controls.Add(lblCurrentWeight);
+        pnlWeight.Controls.Add(lblWeightTitle);
+        pnlWeight.Dock = DockStyle.Bottom;
+        pnlWeight.Location = new Point(0, 192);
+        pnlWeight.Name = "pnlWeight";
+        pnlWeight.Padding = new Padding(8);
+        pnlWeight.Size = new Size(560, 236);
+        pnlWeight.TabIndex = 3;
+        // 
+        // btnConfirmWeight
+        // 
+        btnConfirmWeight.BackColor = Color.FromArgb(0, 122, 204);
+        btnConfirmWeight.Dock = DockStyle.Top;
+        btnConfirmWeight.FlatAppearance.BorderSize = 0;
+        btnConfirmWeight.FlatStyle = FlatStyle.Flat;
+        btnConfirmWeight.Font = new Font("メイリオ", 14F, FontStyle.Bold);
+        btnConfirmWeight.ForeColor = Color.White;
+        btnConfirmWeight.Location = new Point(8, 196);
+        btnConfirmWeight.Name = "btnConfirmWeight";
+        btnConfirmWeight.Size = new Size(544, 42);
+        btnConfirmWeight.TabIndex = 5;
+        btnConfirmWeight.Text = "重量確定";
+        btnConfirmWeight.UseVisualStyleBackColor = false;
+        btnConfirmWeight.Click += btnConfirmWeight_Click;
+        // 
+        // pnlManualInput
+        // 
+        pnlManualInput.BackColor = Color.Transparent;
+        pnlManualInput.Controls.Add(btnNumPad);
+        pnlManualInput.Controls.Add(txtWeightInput);
+        pnlManualInput.Controls.Add(lblManualTitle);
+        pnlManualInput.Dock = DockStyle.Top;
+        pnlManualInput.Location = new Point(8, 152);
+        pnlManualInput.Name = "pnlManualInput";
+        pnlManualInput.Size = new Size(544, 44);
+        pnlManualInput.TabIndex = 4;
+        // 
+        // btnNumPad
+        // 
+        btnNumPad.BackColor = Color.FromArgb(60, 60, 70);
+        btnNumPad.FlatAppearance.BorderSize = 0;
+        btnNumPad.FlatStyle = FlatStyle.Flat;
+        btnNumPad.ForeColor = Color.White;
+        btnNumPad.Location = new Point(356, 4);
+        btnNumPad.Name = "btnNumPad";
+        btnNumPad.Size = new Size(50, 34);
+        btnNumPad.TabIndex = 2;
+        btnNumPad.Text = "??";
+        btnNumPad.UseVisualStyleBackColor = false;
+        btnNumPad.Click += btnNumPad_Click;
+        // 
+        // txtWeightInput
+        // 
+        txtWeightInput.Font = new Font("メイリオ", 14F);
+        txtWeightInput.Location = new Point(102, 4);
+        txtWeightInput.Name = "txtWeightInput";
+        txtWeightInput.Size = new Size(248, 35);
+        txtWeightInput.TabIndex = 1;
+        txtWeightInput.TextAlign = HorizontalAlignment.Right;
+        txtWeightInput.Click += txtWeightInput_Click;
+        txtWeightInput.TextChanged += txtWeightInput_TextChanged;
+        txtWeightInput.KeyPress += txtWeightInput_KeyPress;
+        // 
+        // lblManualTitle
+        // 
+        lblManualTitle.Font = new Font("メイリオ", 9F);
+        lblManualTitle.ForeColor = Color.LightGray;
+        lblManualTitle.Location = new Point(0, 4);
+        lblManualTitle.Name = "lblManualTitle";
+        lblManualTitle.Size = new Size(96, 35);
+        lblManualTitle.TabIndex = 0;
+        lblManualTitle.Text = "重量手入力";
+        lblManualTitle.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // lblWeightStatus
+        // 
+        lblWeightStatus.Dock = DockStyle.Top;
+        lblWeightStatus.Font = new Font("メイリオ", 10F);
+        lblWeightStatus.ForeColor = Color.Gray;
+        lblWeightStatus.Location = new Point(8, 92);
+        lblWeightStatus.Name = "lblWeightStatus";
+        lblWeightStatus.Size = new Size(544, 24);
+        lblWeightStatus.TabIndex = 3;
+        lblWeightStatus.Text = "─ 未接続";
+        lblWeightStatus.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // lblWeightUnit
+        // 
+        lblWeightUnit.Dock = DockStyle.Top;
+        lblWeightUnit.Font = new Font("メイリオ", 22F);
+        lblWeightUnit.ForeColor = Color.LightGray;
+        lblWeightUnit.Location = new Point(8, 98);
+        lblWeightUnit.Name = "lblWeightUnit";
+        lblWeightUnit.Size = new Size(544, 36);
+        lblWeightUnit.TabIndex = 2;
+        lblWeightUnit.Text = "kg";
+        lblWeightUnit.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // lblCurrentWeight
+        // 
+        lblCurrentWeight.Dock = DockStyle.Top;
+        lblCurrentWeight.Font = new Font("メイリオ", 30F, FontStyle.Bold);
+        lblCurrentWeight.ForeColor = Color.LimeGreen;
+        lblCurrentWeight.Location = new Point(8, 38);
+        lblCurrentWeight.Name = "lblCurrentWeight";
+        lblCurrentWeight.Size = new Size(544, 60);
+        lblCurrentWeight.TabIndex = 1;
+        lblCurrentWeight.Text = "---";
+        lblCurrentWeight.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // lblWeightTitle
+        // 
+        lblWeightTitle.Dock = DockStyle.Top;
+        lblWeightTitle.Font = new Font("メイリオ", 12F);
+        lblWeightTitle.ForeColor = Color.White;
+        lblWeightTitle.Location = new Point(8, 8);
+        lblWeightTitle.Name = "lblWeightTitle";
+        lblWeightTitle.Size = new Size(544, 30);
+        lblWeightTitle.TabIndex = 0;
+        lblWeightTitle.Text = "受信重量";
+        lblWeightTitle.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // SupplierSelectDialog
+        // 
+        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleMode = AutoScaleMode.Font;
+        ClientSize = new Size(560, 488);
+        Controls.Add(dgvSuppliers);
+        Controls.Add(pnlWeight);
+        Controls.Add(pnlFilters);
+        Controls.Add(pnlButtons);
+        Controls.Add(lblTitle);
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        MaximizeBox = false;
+        MinimizeBox = false;
+        Name = "SupplierSelectDialog";
+        StartPosition = FormStartPosition.CenterParent;
+        Text = "取引先選択";
+        Shown += SupplierSelectDialog_Shown;
+        Resize += SupplierSelectDialog_Resize;
+        pnlFilters.ResumeLayout(false);
+        pnlFilters.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvSuppliers).EndInit();
+        pnlButtons.ResumeLayout(false);
+        pnlWeight.ResumeLayout(false);
+        pnlManualInput.ResumeLayout(false);
+        pnlManualInput.PerformLayout();
+        ResumeLayout(false);
+    }
+
+    private System.Windows.Forms.Label lblTitle;
+    private System.Windows.Forms.Panel pnlFilters;
+    private System.Windows.Forms.TextBox txtNameFilter;
+    private System.Windows.Forms.TextBox txtCarNoFilter;
+    private System.Windows.Forms.DataGridView dgvSuppliers;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCode;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCarNo;
+    private System.Windows.Forms.Panel pnlButtons;
+    private System.Windows.Forms.Button btnOk;
+    private System.Windows.Forms.Button btnCancel;
+    private System.Windows.Forms.Panel pnlWeight;
+    private System.Windows.Forms.Button btnConfirmWeight;
+    private System.Windows.Forms.Panel pnlManualInput;
+    private System.Windows.Forms.Button btnNumPad;
+    private System.Windows.Forms.TextBox txtWeightInput;
+    private System.Windows.Forms.Label lblManualTitle;
+    private System.Windows.Forms.Label lblWeightStatus;
+    private System.Windows.Forms.Label lblWeightUnit;
+    private System.Windows.Forms.Label lblCurrentWeight;
+    private System.Windows.Forms.Label lblWeightTitle;
+}

@@ -1,0 +1,10 @@
+﻿namespace ScaleLink.Models;
+
+/// <summary>取引先モデル</summary>
+public class SupplierModel
+{
+    public int Id { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string ShortName { get; set; } = string.Empty;
+}

@@ -1,0 +1,178 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+
+namespace ScaleLink.Forms;
+
+/// <summary>重量表示・商品選択フォーム</summary>
+public partial class WeightInputForm : Form
+{
+    private readonly MeasurementTicketForm _ticketForm;
+    private readonly SupplierSelectorForm _selector;
+    private readonly string _supplierCode;
+    private ProductModel? _selectedProduct;
+    private bool _isManualMode = false;
+
+    public WeightInputForm(MeasurementTicketForm ticketForm,
+        SupplierSelectorForm selector, string supplierCode)
+    {
+        _ticketForm   = ticketForm;
+        _selector     = selector;
+        _supplierCode = supplierCode;
+        InitializeComponent();
+        LoadProductButtons();
+        SubscribeWeightEvents();
+    }
+
+    // ─── 商品ボタン動的生成 ────────────────────────────────
+    private void LoadProductButtons()
+    {
+        var products = MasterDataService.Instance.Products;
+        foreach (var p in products.Where(x => x.IsFrequent))
+            flpFrequent.Controls.Add(CreateProductButton(p, Color.FromArgb(255, 255, 220)));
+        foreach (var p in products.Where(x => !x.IsFrequent))
+            flpAllProducts.Controls.Add(CreateProductButton(p, Color.White));
+    }
+
+    private Button CreateProductButton(ProductModel product, Color backColor)
+    {
+        var btn = new Button
+        {
+            Text      = product.Name,
+            Width     = 360,
+            Height    = 65,
+            Font      = new Font("メイリオ", 14f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = backColor,
+            ForeColor = Color.Black,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Tag       = product,
+            Margin    = new Padding(2),
+        };
+        btn.FlatAppearance.BorderColor = Color.LightGray;
+        btn.Click += OnProductButtonClicked;
+        return btn;
+    }
+
+    // ─── 商品選択 ──────────────────────────────────────────
+    private void OnProductButtonClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not ProductModel product) return;
+        ClearProductSelection();
+        _selectedProduct = product;
+        btn.BackColor    = Color.SkyBlue;
+        _selector.UpdateSupplierState(_supplierCode, SupplierButtonState.Weighing);
+    }
+
+    private void ClearProductSelection()
+    {
+        _selectedProduct = null;
+        foreach (Control c in flpFrequent.Controls)
+            if (c is Button b && b.Tag is ProductModel)
+                b.BackColor = Color.FromArgb(255, 255, 220);
+        foreach (Control c in flpAllProducts.Controls)
+            if (c is Button b && b.Tag is ProductModel)
+                b.BackColor = Color.White;
+    }
+
+    // ─── 重量確定ボタン ────────────────────────────────────
+    private void btnConfirmWeight_Click(object sender, EventArgs e)
+    {
+        if (_selectedProduct is null)
+        {
+            MessageBox.Show("商品を選択してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        decimal weight;
+        if (_isManualMode)
+        {
+            if (!decimal.TryParse(txtManualWeight.Text, out weight) || weight <= 0)
+            {
+                MessageBox.Show("重量は数値で入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+        else
+        {
+            var status = SerialPortService.Instance.Status;
+            if (status == WeightStatus.Error || status == WeightStatus.Disconnected)
+            {
+                MessageBox.Show("重量が正常に受信できていません。手入力してください。", "受信エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SetManualMode(true);
+                return;
+            }
+            weight = SerialPortService.Instance.LastWeight;
+            if (weight <= 0)
+            {
+                MessageBox.Show("重量が0です。計量を確認してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+        if (!_ticketForm.SetDetail(_selectedProduct, weight))
+        {
+            MessageBox.Show("明細行が満杯です。登録してください。", "満杯", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        ClearProductSelection();
+        txtManualWeight.Text = string.Empty;
+        SetManualMode(false);
+        _selector.UpdateSupplierState(_supplierCode, SupplierButtonState.Inputting);
+    }
+
+    // ─── テンキーパッドボタン ─────────────────────────────
+    private void btnNumPad_Click(object sender, EventArgs e)
+    {
+        SetManualMode(true);
+        using var numPad = new Dialogs.NumPadForm(txtManualWeight.Text);
+        if (numPad.ShowDialog(this) == DialogResult.OK)
+            txtManualWeight.Text = numPad.InputValue;
+    }
+
+    // ─── 手入力テキストボックス クリック ──────────────────
+    private void txtManualWeight_Click(object sender, EventArgs e) => SetManualMode(true);
+
+    // ─── 手入力テキストボックス キー入力制限 ──────────────
+    private void txtManualWeight_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != '\b')
+            e.Handled = true;
+    }
+
+    // ─── RS-232C重量受信 ──────────────────────────────────
+    private void SubscribeWeightEvents() =>
+        SerialPortService.Instance.WeightReceived += OnWeightReceived;
+
+    private void OnWeightReceived(object? sender, WeightReceivedEventArgs e)
+    {
+        if (InvokeRequired) { Invoke(() => OnWeightReceived(sender, e)); return; }
+        if (_isManualMode) return;
+        lblCurrentWeight.Text = e.Weight.ToString("#,##0.0");
+        (lblWeightStatus.Text, lblWeightStatus.ForeColor) = e.Status switch
+        {
+            WeightStatus.Stable       => ("● 安定",      Color.LimeGreen),
+            WeightStatus.Unstable     => ("▲ 計量中",    Color.Orange),
+            WeightStatus.Error        => ("✕ 受信エラー", Color.Red),
+            WeightStatus.Disconnected => ("─ 未接続",    Color.Gray),
+            _ => ("─ 未接続", Color.Gray),
+        };
+        btnConfirmWeight.Enabled = e.Status == WeightStatus.Stable;
+    }
+
+    // ─── 手入力モード切替 ─────────────────────────────────
+    private void SetManualMode(bool manual)
+    {
+        _isManualMode            = manual;
+        txtManualWeight.Enabled  = manual;
+        btnConfirmWeight.Enabled = true;
+        if (manual)
+        {
+            lblWeightStatus.Text      = "● 手入力モード";
+            lblWeightStatus.ForeColor = Color.Cyan;
+        }
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        SerialPortService.Instance.WeightReceived -= OnWeightReceived;
+        base.OnClosed(e);
+    }
+}

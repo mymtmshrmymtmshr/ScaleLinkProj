@@ -1,0 +1,155 @@
+﻿using System.Globalization;
+
+namespace ScaleLink.Dialogs;
+
+/// <summary>テンキーパッドダイアログ</summary>
+public partial class NumPadForm : Form
+{
+    public string InputValue => txtDisplay.Text;
+
+    public NumPadForm(string initialValue = "")
+    {
+        InitializeComponent();
+        txtDisplay.Text = NormalizeDisplayText(initialValue);
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        var keyCode = keyData & Keys.KeyCode;
+
+        if (keyCode is >= Keys.D0 and <= Keys.D9)
+        {
+            AppendDigit((char)('0' + (keyCode - Keys.D0)));
+            return true;
+        }
+
+        if (keyCode is >= Keys.NumPad0 and <= Keys.NumPad9)
+        {
+            AppendDigit((char)('0' + (keyCode - Keys.NumPad0)));
+            return true;
+        }
+
+        if (keyCode == Keys.Back)
+        {
+            BackspaceDisplay();
+            return true;
+        }
+
+        if (keyCode == Keys.Enter)
+        {
+            ConfirmInput();
+            return true;
+        }
+
+        // 小数点入力は無効
+        if (keyCode == Keys.Decimal || keyCode == Keys.OemPeriod)
+            return true;
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private void NumKey_Click(object sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+
+        switch (btn.Text)
+        {
+            case "OK":
+                ConfirmInput();
+                break;
+            case "C":
+                txtDisplay.Text = "";
+                break;
+            case "◀":
+                BackspaceDisplay();
+                break;
+            case ".":
+                // 小数点入力は無効
+                break;
+            default:
+                if (btn.Text.Length == 1 && char.IsDigit(btn.Text[0]))
+                    AppendDigit(btn.Text[0]);
+                break;
+        }
+    }
+
+    private void ConfirmInput()
+    {
+        if (decimal.TryParse(txtDisplay.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out _))
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        else
+        {
+            MessageBox.Show("有効な数値を入力してください。");
+        }
+    }
+
+    private void AppendDigit(char digit)
+    {
+        if (!char.IsDigit(digit)) return;
+
+        var currentDigits = GetDigitsOnly(txtDisplay.Text);
+
+        if (currentDigits == "0")
+        {
+            if (digit == '0')
+            {
+                txtDisplay.Text = "0";
+                return;
+            }
+
+            txtDisplay.Text = digit.ToString();
+            return;
+        }
+
+        currentDigits += digit;
+        txtDisplay.Text = NormalizeDisplayText(currentDigits);
+    }
+
+    private void BackspaceDisplay()
+    {
+        var text = txtDisplay.Text;
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        var removeIndex = text.Length - 1;
+        var removeLength = 1;
+
+        // 削除対象がカンマなら、左隣の数字も一緒に削除
+        if (text[removeIndex] == ',')
+        {
+            if (removeIndex == 0)
+            {
+                txtDisplay.Text = string.Empty;
+                return;
+            }
+
+            removeIndex--;
+            removeLength = 2;
+        }
+
+        text = text.Remove(removeIndex, removeLength);
+        txtDisplay.Text = NormalizeDisplayText(text);
+    }
+
+    private static string NormalizeDisplayText(string text)
+    {
+        var digits = GetDigitsOnly(text);
+        if (string.IsNullOrEmpty(digits))
+            return string.Empty;
+
+        digits = digits.TrimStart('0');
+        if (digits.Length == 0)
+            return "0";
+
+        if (decimal.TryParse(digits, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+            return value.ToString("#,##0", CultureInfo.CurrentCulture);
+
+        return digits;
+    }
+
+    private static string GetDigitsOnly(string text) =>
+        new(text.Where(char.IsDigit).ToArray());
+}

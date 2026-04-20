@@ -1,0 +1,88 @@
+﻿namespace ScaleLink.Dialogs;
+
+/// <summary>テンキーパッドダイアログ</summary>
+public partial class NumPadForm : Form
+{
+    public string InputValue => txtDisplay.Text;
+
+    public NumPadForm(string initialValue = "")
+    {
+        InitializeComponent();
+        txtDisplay.Text = initialValue;
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        var keyCode = keyData & Keys.KeyCode;
+
+        if (keyCode is >= Keys.D0 and <= Keys.D9)
+        {
+            txtDisplay.Text += (char)('0' + (keyCode - Keys.D0));
+            return true;
+        }
+
+        if (keyCode is >= Keys.NumPad0 and <= Keys.NumPad9)
+        {
+            txtDisplay.Text += (char)('0' + (keyCode - Keys.NumPad0));
+            return true;
+        }
+
+        if (keyCode == Keys.Decimal || keyCode == Keys.OemPeriod)
+        {
+            if (!txtDisplay.Text.Contains('.'))
+                txtDisplay.Text += ".";
+            return true;
+        }
+
+        if (keyCode == Keys.Back)
+        {
+            if (txtDisplay.Text.Length > 0)
+                txtDisplay.Text = txtDisplay.Text[..^1];
+            return true;
+        }
+
+        if (keyCode == Keys.Enter)
+        {
+            if (decimal.TryParse(txtDisplay.Text, out _))
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("有効な数値を入力してください。");
+            }
+            return true;
+        }
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private void NumKey_Click(object sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+        switch (btn.Text)
+        {
+            case "OK":
+                if (decimal.TryParse(txtDisplay.Text, out _))
+                { DialogResult = DialogResult.OK; Close(); }
+                else
+                    MessageBox.Show("有効な数値を入力してください。");
+                break;
+            case "C":
+                txtDisplay.Text = "";
+                break;
+            case "◀":
+                if (txtDisplay.Text.Length > 0)
+                    txtDisplay.Text = txtDisplay.Text[..^1];
+                break;
+            case ".":
+                if (!txtDisplay.Text.Contains('.'))
+                    txtDisplay.Text += ".";
+                break;
+            default:
+                txtDisplay.Text += btn.Text;
+                break;
+        }
+    }
+}

@@ -1,0 +1,24 @@
+﻿$files = Get-ChildItem "C:\Temp\AI用資料\ScaleLink" -Recurse -Filter *.cs |
+    Where-Object { $_.FullName -notlike "*\bin\*" -and $_.FullName -notlike "*\obj\*" }
+
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+$cp932 = [System.Text.Encoding]::GetEncoding(932)
+$count = 0
+
+foreach ($f in $files) {
+    $bytes = [System.IO.File]::ReadAllBytes($f.FullName)
+
+    if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+        $text = [System.Text.Encoding]::UTF8.GetString($bytes, 3, $bytes.Length - 3)
+    } elseif ($bytes.Length -ge 2 -and (($bytes[0] -eq 0xFF -and $bytes[1] -eq 0xFE) -or ($bytes[0] -eq 0xFE -and $bytes[1] -eq 0xFF))) {
+        $text = [System.Text.Encoding]::Unicode.GetString($bytes)
+    } else {
+        $text = $cp932.GetString($bytes)
+    }
+
+    [System.IO.File]::WriteAllText($f.FullName, $text, $utf8NoBom)
+    $count++
+    Write-Host "OK: $($f.Name)"
+}
+
+Write-Host "Done: $count files converted to UTF-8 (no BOM)"

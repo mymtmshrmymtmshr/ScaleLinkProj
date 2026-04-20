@@ -1,0 +1,283 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+using Microsoft.Data.Sqlite;
+
+namespace ScaleLink.Forms;
+
+/// <summary>計量票入力フォーム</summary>
+public partial class MeasurementTicketForm : Form
+{
+    private readonly SupplierModel _supplier;
+    private readonly SupplierSelectorForm _selector;
+    public event EventHandler<int>? RegistrationCompleted;
+    public bool HasUnsavedData => GetFilledRowCount() > 0;
+    private const int MaxRows = 12;
+
+    public MeasurementTicketForm(SupplierModel supplier, SupplierSelectorForm selector)
+    {
+        _supplier = supplier;
+        _selector = selector;
+        InitializeComponent();
+        InitializeGrid();
+        SetSupplierDefaults();
+    }
+
+    // ─── グリッド初期化 ────────────────────────────────────
+    private void InitializeGrid()
+    {
+        dgvDetails.Columns.AddRange(
+            MakeCol("colNo",          "No",     35,  false, DataGridViewContentAlignment.MiddleCenter),
+            MakeCol("colCode",        "コード", 60,  true,  DataGridViewContentAlignment.MiddleCenter),
+            MakeCol("colProductName", "品名",   160, false, DataGridViewContentAlignment.MiddleLeft),
+            MakeCol("colQuantity",    "数量",   90,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colCount",       "本数",   60,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colUnitPrice",   "単価",   75,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colAmount",      "金額",   90,  false, DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colPayment",     "支払額", 90,  false, DataGridViewContentAlignment.MiddleRight)
+        );
+        for (int i = 0; i < MaxRows; i++)
+        {
+            dgvDetails.Rows.Add(i + 1, "", "", "", "", "", "", "");
+            SetReadOnlyRowStyle(i);
+        }
+        dgvDetails.CellValueChanged += OnCellValueChanged;
+        dgvDetails.CellEndEdit      += (_, _) => RecalcTotals();
+    }
+
+    // ─── 業者デフォルト設定 ───────────────────────────────
+    private void SetSupplierDefaults()
+    {
+        dtpCollectDate.Value   = DateTime.Today;
+        dtpAccountDate.Value   = DateTime.Today;
+        txtSupplierCode.Text   = _supplier.Code;
+        lblSupplierName.Text   = _supplier.Name;
+        txtScaleNo.Text        = "1";
+    }
+
+    // ─── 重量転記（WeightInputForm から呼出） ─────────────
+    public bool SetDetail(ProductModel product, decimal weight)
+    {
+        int emptyRow = FindNextEmptyRow();
+        if (emptyRow < 0) return false;
+        var row = dgvDetails.Rows[emptyRow];
+        row.Cells["colCode"].Value        = product.Code;
+        row.Cells["colProductName"].Value = product.Name;
+        row.Cells["colQuantity"].Value    = weight.ToString("#,##0.0");
+        row.Cells["colUnitPrice"].Value   = product.UnitPrice.ToString("#,##0.00");
+        RecalcRow(emptyRow, product);
+        RecalcTotals();
+        return true;
+    }
+
+    // ─── 自動計算 ──────────────────────────────────────────
+    private void OnCellValueChanged(object? sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex < 0) return;
+        var col = dgvDetails.Columns[e.ColumnIndex].Name;
+        if (col is "colQuantity" or "colUnitPrice") RecalcRowByIndex(e.RowIndex);
+    }
+
+    private void RecalcRowByIndex(int rowIndex)
+    {
+        var row = dgvDetails.Rows[rowIndex];
+        decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+        decimal.TryParse(row.Cells["colUnitPrice"].Value?.ToString(), out var price);
+        var amount = Math.Floor(qty * price);
+        row.Cells["colAmount"].Value  = amount.ToString("#,##0");
+        row.Cells["colPayment"].Value = amount.ToString("#,##0");
+        RecalcTotals();
+    }
+
+    private void RecalcRow(int rowIndex, ProductModel product)
+    {
+        var row = dgvDetails.Rows[rowIndex];
+        decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+        row.Cells["colAmount"].Value  = Math.Floor(qty * product.UnitPrice).ToString("#,##0");
+        row.Cells["colPayment"].Value = Math.Floor(qty * product.PaymentUnitPrice).ToString("#,##0");
+    }
+
+    private void RecalcTotals()
+    {
+        decimal totalQty = 0, totalAmount = 0, totalPayment = 0;
+        int totalCount = 0;
+        foreach (DataGridViewRow row in dgvDetails.Rows)
+        {
+            decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+            int.TryParse(row.Cells["colCount"].Value?.ToString(),        out var cnt);
+            decimal.TryParse(row.Cells["colAmount"].Value?.ToString(),   out var amt);
+            decimal.TryParse(row.Cells["colPayment"].Value?.ToString(),  out var pay);
+            totalQty     += qty;
+            totalCount   += cnt;
+            totalAmount  += amt;
+            totalPayment += pay;
+        }
+        lblTotalQuantity.Text = totalQty.ToString("#,##0.0");
+        lblTotalCount.Text    = totalCount.ToString("#,##0");
+        lblTotalAmount.Text   = totalAmount.ToString("#,##0");
+        lblTotalPayment.Text  = totalPayment.ToString("#,##0");
+    }
+
+    // ─── 登録ボタン ────────────────────────────────────────
+    private void btnRegister_Click(object sender, EventArgs e)
+    {
+        if (GetFilledRowCount() == 0)
+        {
+            MessageBox.Show("明細が入力されていません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        try
+        {
+            SaveToDatabase();
+            MessageBox.Show("登録が完了しました。", "完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            RegistrationCompleted?.Invoke(this, _supplier.Id);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"登録エラー:\n{ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void SaveToDatabase()
+    {
+        var conn = DatabaseService.Instance.Connection;
+        using var tx = conn.BeginTransaction();
+        decimal.TryParse(lblTotalQuantity.Text, out var tq);
+        int.TryParse(lblTotalCount.Text,         out var tc);
+        decimal.TryParse(lblTotalAmount.Text,    out var ta);
+        decimal.TryParse(lblTotalPayment.Text,   out var tp);
+
+        using var cmdH = conn.CreateCommand();
+        cmdH.Transaction = tx;
+        cmdH.CommandText = """
+            INSERT INTO t_measurement_ticket
+              (collect_date,account_date,branch_code,transaction_type,scale_no,
+               supplier_code,carrier_code,car_no,payment_type,staff_code,
+               total_quantity,total_count,total_amount,total_payment)
+            VALUES($cd,$ad,$bc,$tt,$sn,$sc,$cc,$cn,$pt,$stf,$tq,$tc,$ta,$tp);
+            """;
+        cmdH.Parameters.AddWithValue("$cd",  dtpCollectDate.Value.ToString("yyyy-MM-dd"));
+        cmdH.Parameters.AddWithValue("$ad",  dtpAccountDate.Value.ToString("yyyy-MM-dd"));
+        cmdH.Parameters.AddWithValue("$bc",  txtBranchCode.Text);
+        cmdH.Parameters.AddWithValue("$tt",  cmbTransType.Text);
+        cmdH.Parameters.AddWithValue("$sn",  txtScaleNo.Text);
+        cmdH.Parameters.AddWithValue("$sc",  txtSupplierCode.Text);
+        cmdH.Parameters.AddWithValue("$cc",  txtCarrierCode.Text);
+        cmdH.Parameters.AddWithValue("$cn",  txtCarNo.Text);
+        cmdH.Parameters.AddWithValue("$pt",  cmbPaymentType.Text);
+        cmdH.Parameters.AddWithValue("$stf", txtStaffCode.Text);
+        cmdH.Parameters.AddWithValue("$tq",  tq);
+        cmdH.Parameters.AddWithValue("$tc",  tc);
+        cmdH.Parameters.AddWithValue("$ta",  ta);
+        cmdH.Parameters.AddWithValue("$tp",  tp);
+        cmdH.ExecuteNonQuery();
+
+        using var cmdId = conn.CreateCommand();
+        cmdId.Transaction  = tx;
+        cmdId.CommandText  = "SELECT last_insert_rowid()";
+        long ticketId = (long)(cmdId.ExecuteScalar() ?? 0L);
+
+        foreach (DataGridViewRow row in dgvDetails.Rows)
+        {
+            var code = row.Cells["colCode"].Value?.ToString() ?? "";
+            if (string.IsNullOrWhiteSpace(code)) continue;
+            decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(),  out var qty);
+            int.TryParse(row.Cells["colCount"].Value?.ToString(),          out var cnt);
+            decimal.TryParse(row.Cells["colUnitPrice"].Value?.ToString(), out var up);
+            decimal.TryParse(row.Cells["colAmount"].Value?.ToString(),    out var amt);
+            decimal.TryParse(row.Cells["colPayment"].Value?.ToString(),   out var pay);
+            using var cmdD = conn.CreateCommand();
+            cmdD.Transaction = tx;
+            cmdD.CommandText = """
+                INSERT INTO t_measurement_detail
+                  (ticket_id,no,code,product_name,quantity,count,unit_price,amount,payment)
+                VALUES($tid,$no,$cd,$pn,$qty,$cnt,$up,$amt,$pay);
+                """;
+            cmdD.Parameters.AddWithValue("$tid", ticketId);
+            cmdD.Parameters.AddWithValue("$no",  row.Cells["colNo"].Value);
+            cmdD.Parameters.AddWithValue("$cd",  code);
+            cmdD.Parameters.AddWithValue("$pn",  row.Cells["colProductName"].Value?.ToString() ?? "");
+            cmdD.Parameters.AddWithValue("$qty", qty);
+            cmdD.Parameters.AddWithValue("$cnt", cnt);
+            cmdD.Parameters.AddWithValue("$up",  up);
+            cmdD.Parameters.AddWithValue("$amt", amt);
+            cmdD.Parameters.AddWithValue("$pay", pay);
+            cmdD.ExecuteNonQuery();
+        }
+        tx.Commit();
+    }
+
+    // ─── クリアボタン ──────────────────────────────────────
+    private void btnClear_Click(object sender, EventArgs e)
+    {
+        if (GetFilledRowCount() > 0)
+        {
+            if (MessageBox.Show("入力内容をクリアしますか？", "確認",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+        }
+        ClearAll();
+    }
+
+    private void ClearAll()
+    {
+        for (int i = 0; i < MaxRows; i++)
+        {
+            var row = dgvDetails.Rows[i];
+            row.Cells["colCode"].Value        = "";
+            row.Cells["colProductName"].Value = "";
+            row.Cells["colQuantity"].Value    = "";
+            row.Cells["colCount"].Value       = "";
+            row.Cells["colUnitPrice"].Value   = "";
+            row.Cells["colAmount"].Value      = "";
+            row.Cells["colPayment"].Value     = "";
+        }
+        RecalcTotals();
+    }
+
+    // ─── 印刷ボタン ────────────────────────────────────────
+    private void btnPrintShipping_Click(object sender, EventArgs e) =>
+        MessageBox.Show("仕切書印刷（未実装）");
+    private void btnPrintReceipt_Click(object sender, EventArgs e) =>
+        MessageBox.Show("検収票印刷（未実装）");
+
+    // ─── 取引先コード入力 ─────────────────────────────────
+    private void txtSupplierCode_Leave(object sender, EventArgs e)
+    {
+        var found = MasterDataService.Instance.Suppliers
+            .FirstOrDefault(s => s.Code == txtSupplierCode.Text);
+        lblSupplierName.Text = found?.Name ?? "";
+    }
+
+    // ─── ユーティリティ ───────────────────────────────────
+    private int FindNextEmptyRow()
+    {
+        for (int i = 0; i < MaxRows; i++)
+            if (string.IsNullOrWhiteSpace(dgvDetails.Rows[i].Cells["colCode"].Value?.ToString()))
+                return i;
+        return -1;
+    }
+
+    private int GetFilledRowCount() =>
+        dgvDetails.Rows.Cast<DataGridViewRow>()
+            .Count(r => !string.IsNullOrWhiteSpace(r.Cells["colCode"].Value?.ToString()));
+
+    private void SetReadOnlyRowStyle(int i)
+    {
+        var gray = new DataGridViewCellStyle { BackColor = Color.FromArgb(240, 240, 240) };
+        dgvDetails.Rows[i].Cells["colNo"].Style          = gray;
+        dgvDetails.Rows[i].Cells["colProductName"].Style = gray;
+        dgvDetails.Rows[i].Cells["colAmount"].Style      = gray;
+        dgvDetails.Rows[i].Cells["colPayment"].Style     = gray;
+    }
+
+    private static DataGridViewTextBoxColumn MakeCol(
+        string name, string header, int width, bool editable,
+        DataGridViewContentAlignment align) => new()
+    {
+        Name             = name,
+        HeaderText       = header,
+        Width            = width,
+        ReadOnly         = !editable,
+        DefaultCellStyle = new DataGridViewCellStyle { Alignment = align },
+        HeaderCell       = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+    };
+}

@@ -1,0 +1,97 @@
+﻿using ScaleLink.Models;
+using Microsoft.Data.Sqlite;
+
+namespace ScaleLink.Services;
+
+/// <summary>マスタデータ管理サービス（シングルトン・キャッシュ）</summary>
+public class MasterDataService
+{
+    private static MasterDataService? _instance;
+    private static readonly object _lock = new();
+
+    public List<SupplierModel> Suppliers { get; private set; } = [];
+    public List<ProductModel> Products { get; private set; } = [];
+
+    private MasterDataService() { }
+
+    public static MasterDataService Instance
+    {
+        get
+        {
+            lock (_lock)
+            {
+                _instance ??= new MasterDataService();
+                return _instance;
+            }
+        }
+    }
+
+    /// <summary>全マスタデータをDBから読み込む</summary>
+    public void Load()
+    {
+        LoadSuppliers();
+        LoadProducts();
+    }
+
+    private void LoadSuppliers()
+    {
+        Suppliers.Clear();
+
+        // exeと同じフォルダにあるSuppliers.csvから読み込む
+        var exePath = AppDomain.CurrentDomain.BaseDirectory;
+        var csvPath = Path.Combine(exePath, "Suppliers.csv");
+
+        if (!File.Exists(csvPath))
+        {
+            // CSVファイルが存在しない場合は空のまま
+            return;
+        }
+
+        var lines = File.ReadAllLines(csvPath);
+        // 1行目はヘッダーと仮定してスキップ
+        foreach (var line in lines.Skip(1))
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            var fields = line.Split(',');
+            if (fields.Length >= 3)
+            {
+                Suppliers.Add(new SupplierModel
+                {
+                    Code  = fields[0].Trim(),
+                    Name  = fields[1].Trim(),
+                    CarNo = fields[2].Trim(),
+                });
+            }
+        }
+    }
+
+    private void LoadProducts()
+    {
+        Products.Clear();
+        var conn = DatabaseService.Instance.Connection;
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = """
+            SELECT id, code, name, unit_price, payment_unit_price, is_frequent
+            FROM m_product
+            ORDER BY is_frequent DESC, code
+            """;
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            Products.Add(new ProductModel
+            {
+                Id               = reader.GetInt32(0),
+                Code             = reader.GetString(1),
+                Name             = reader.GetString(2),
+                UnitPrice        = reader.GetDecimal(3),
+                PaymentUnitPrice = reader.GetDecimal(4),
+                IsFrequent       = reader.GetInt32(5) == 1,
+            });
+        }
+    }
+
+    /// <summary>商品コードから商品を検索する</summary>
+    public ProductModel? FindProduct(string code) =>
+        Products.FirstOrDefault(p => p.Code == code);
+}

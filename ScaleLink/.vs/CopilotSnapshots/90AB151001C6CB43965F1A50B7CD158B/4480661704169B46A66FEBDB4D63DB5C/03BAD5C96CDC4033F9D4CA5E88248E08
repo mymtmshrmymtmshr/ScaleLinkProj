@@ -1,0 +1,160 @@
+﻿using ScaleLink.Models;
+using Microsoft.Data.Sqlite;
+using System.Text;
+
+namespace ScaleLink.Services;
+
+/// <summary>マスタデータ管理サービス（シングルトン・キャッシュ）</summary>
+public class MasterDataService
+{
+    private static MasterDataService? _instance;
+    private static readonly object _lock = new();
+    private static readonly Encoding SupplierCsvEncoding = CreateSupplierCsvEncoding();
+
+    public List<SupplierModel> Suppliers { get; private set; } = [];
+    public List<ProductModel> Products { get; private set; } = [];
+    public List<ProductModel> FrequentProducts { get; private set; } = [];
+    public List<ProductModel> OtherProducts { get; private set; } = [];
+
+    private MasterDataService() { }
+
+    private static Encoding CreateSupplierCsvEncoding()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        return Encoding.GetEncoding("shift_jis");
+    }
+
+    public static MasterDataService Instance
+    {
+        get
+        {
+            lock (_lock)
+            {
+                _instance ??= new MasterDataService();
+                return _instance;
+            }
+        }
+    }
+
+    /// <summary>全マスタデータをDBから読み込む</summary>
+    public void Load()
+    {
+        LoadSuppliers();
+        LoadProducts();
+    }
+
+    private void LoadSuppliers()
+    {
+        Suppliers.Clear();
+
+        // exeと同じフォルダにあるSuppliers.csvから読み込む
+        var exePath = AppDomain.CurrentDomain.BaseDirectory;
+        var csvPath = Path.Combine(exePath, "Suppliers.csv");
+
+        if (!File.Exists(csvPath))
+        {
+            // CSVファイルが存在しない場合は空のまま
+            return;
+        }
+
+        var lines = File.ReadAllLines(csvPath, SupplierCsvEncoding);
+        // 1行目はヘッダーと仮定してスキップ
+        foreach (var line in lines.Skip(1))
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            var fields = line.Split(',');
+            if (fields.Length >= 3)
+            {
+                Suppliers.Add(new SupplierModel
+                {
+                    Code = fields[0].Trim(),
+                    Name = fields[1].Trim(),
+                    CarNo = fields[2].Trim(),
+                });
+            }
+        }
+    }
+
+    private void LoadProducts()
+    {
+        Products.Clear();
+        FrequentProducts.Clear();
+        OtherProducts.Clear();
+
+        // exeと同じフォルダにあるProducts.csvから読み込む
+        var exePath = AppDomain.CurrentDomain.BaseDirectory;
+        var csvPath = Path.Combine(exePath, "Products.csv");
+
+        if (!File.Exists(csvPath))
+            return;
+
+        var lines = File.ReadAllLines(csvPath, SupplierCsvEncoding);
+        if (lines.Length <= 1)
+            return;
+
+        var headers = lines[0].Split(',').Select(x => x.Trim()).ToArray();
+        int idxCode = Array.FindIndex(headers, h => h.Equals("CODE", StringComparison.OrdinalIgnoreCase));
+        int idxName = Array.FindIndex(headers, h => h.Equals("NAME", StringComparison.OrdinalIgnoreCase) || h.Equals("品名", StringComparison.OrdinalIgnoreCase));
+        int idxUnitPrice = Array.FindIndex(headers, h => h.Equals("UNIT_PRICE", StringComparison.OrdinalIgnoreCase));
+        int idxPaymentUnitPrice = Array.FindIndex(headers, h => h.Equals("PAYMENT_UNIT_PRICE", StringComparison.OrdinalIgnoreCase));
+        int idxUsage = Array.FindIndex(headers, h => h.Equals("USAGE", StringComparison.OrdinalIgnoreCase));
+
+        if (idxCode < 0) idxCode = 0;
+        if (idxName < 0) idxName = 1;
+        if (idxUnitPrice < 0) idxUnitPrice = 2;
+        if (idxPaymentUnitPrice < 0) idxPaymentUnitPrice = 3;
+        if (idxUsage < 0) idxUsage = 4;
+
+        var id = 1;
+        foreach (var line in lines.Skip(1))
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            var fields = line.Split(',');
+            var maxRequiredIndex = new[] { idxCode, idxName, idxUsage }.Max();
+            if (fields.Length <= maxRequiredIndex) continue;
+
+            var code = fields[idxCode].Trim();
+            var name = fields[idxName].Trim();
+            var usageText = fields[idxUsage].Trim();
+
+            if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(name))
+                continue;
+
+            if (!int.TryParse(usageText, out var usage))
+                continue;
+
+            decimal unitPrice = 0;
+            decimal paymentUnitPrice = 0;
+
+            if (fields.Length > idxUnitPrice)
+                decimal.TryParse(fields[idxUnitPrice].Trim(), out unitPrice);
+            if (fields.Length > idxPaymentUnitPrice)
+                decimal.TryParse(fields[idxPaymentUnitPrice].Trim(), out paymentUnitPrice);
+
+            var product = new ProductModel
+            {
+                Id = id++,
+                Code = code,
+                Name = name,
+                UnitPrice = unitPrice,
+                PaymentUnitPrice = paymentUnitPrice,
+                IsFrequent = usage == 1,
+            };
+
+            if (usage == 1)
+                FrequentProducts.Add(product);
+            else if (usage == 2)
+                OtherProducts.Add(product);
+        }
+
+        FrequentProducts = FrequentProducts.OrderBy(x => x.Code).ToList();
+        OtherProducts = OtherProducts.OrderBy(x => x.Code).ToList();
+        Products = FrequentProducts.Concat(OtherProducts).ToList();
+    }
+
+    /// <summary>商品コードから商品を検索する</summary>
+    public ProductModel? FindProduct(string code) =>
+        Products.FirstOrDefault(p => p.Code == code);
+}

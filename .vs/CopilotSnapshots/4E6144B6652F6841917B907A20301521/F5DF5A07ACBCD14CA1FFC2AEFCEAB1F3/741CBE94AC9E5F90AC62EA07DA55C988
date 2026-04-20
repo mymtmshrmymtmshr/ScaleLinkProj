@@ -1,0 +1,358 @@
+﻿namespace ScaleLink.Forms;
+
+partial class MeasurementTicketForm
+{
+    private System.ComponentModel.IContainer components = null;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components != null))
+            components.Dispose();
+        base.Dispose(disposing);
+    }
+
+    private void InitializeComponent()
+    {
+        this.components = new System.ComponentModel.Container();
+        this.lblTitle = new System.Windows.Forms.Label();
+        this.tlpHeader = new System.Windows.Forms.TableLayoutPanel();
+        this.lblColDate = new System.Windows.Forms.Label();
+        this.lblAccDate = new System.Windows.Forms.Label();
+        this.lblBranch = new System.Windows.Forms.Label();
+        this.lblTransType = new System.Windows.Forms.Label();
+        this.lblScaleNo = new System.Windows.Forms.Label();
+        this.dtpCollectDate = new System.Windows.Forms.DateTimePicker();
+        this.dtpAccountDate = new System.Windows.Forms.DateTimePicker();
+        this.pnlBranch = new System.Windows.Forms.Panel();
+        this.txtBranchCode = new System.Windows.Forms.TextBox();
+        this.lblBranchName = new System.Windows.Forms.Label();
+        this.pnlTransType = new System.Windows.Forms.Panel();
+        this.cmbTransType = new System.Windows.Forms.ComboBox();
+        this.lblTransTypeName = new System.Windows.Forms.Label();
+        this.txtScaleNo = new System.Windows.Forms.TextBox();
+        this.tlpSupplier = new System.Windows.Forms.TableLayoutPanel();
+        this.lblSupplierHd = new System.Windows.Forms.Label();
+        this.lblSupplierNameHd = new System.Windows.Forms.Label();
+        this.lblCarrierHd = new System.Windows.Forms.Label();
+        this.lblCarNoHd = new System.Windows.Forms.Label();
+        this.lblPayTypeHd = new System.Windows.Forms.Label();
+        this.lblStaffHd = new System.Windows.Forms.Label();
+        this.txtSupplierCode = new System.Windows.Forms.TextBox();
+        this.lblSupplierName = new System.Windows.Forms.Label();
+        this.pnlCarrier = new System.Windows.Forms.Panel();
+        this.txtCarrierCode = new System.Windows.Forms.TextBox();
+        this.lblCarrierName = new System.Windows.Forms.Label();
+        this.txtCarNo = new System.Windows.Forms.TextBox();
+        this.pnlPayType = new System.Windows.Forms.Panel();
+        this.cmbPaymentType = new System.Windows.Forms.ComboBox();
+        this.lblPaymentTypeName = new System.Windows.Forms.Label();
+        this.txtStaffCode = new System.Windows.Forms.TextBox();
+        this.dgvDetails = new System.Windows.Forms.DataGridView();
+        this.pnlTotal = new System.Windows.Forms.Panel();
+        this.lblTotalCaption = new System.Windows.Forms.Label();
+        this.lblTotalQuantity = new System.Windows.Forms.Label();
+        this.lblTotalCount = new System.Windows.Forms.Label();
+        this.lblTotalAmount = new System.Windows.Forms.Label();
+        this.lblTotalPayment = new System.Windows.Forms.Label();
+        this.pnlButtons = new System.Windows.Forms.Panel();
+        this.btnRegister = new System.Windows.Forms.Button();
+        this.btnClear = new System.Windows.Forms.Button();
+        this.btnPrintShipping = new System.Windows.Forms.Button();
+        this.btnPrintReceipt = new System.Windows.Forms.Button();
+        this.tlpHeader.SuspendLayout();
+        this.pnlBranch.SuspendLayout();
+        this.pnlTransType.SuspendLayout();
+        this.tlpSupplier.SuspendLayout();
+        this.pnlCarrier.SuspendLayout();
+        this.pnlPayType.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)(this.dgvDetails)).BeginInit();
+        this.pnlTotal.SuspendLayout();
+        this.pnlButtons.SuspendLayout();
+        this.SuspendLayout();
+        // 
+        // lblTitle
+        // 
+        this.lblTitle.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
+        this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        this.lblTitle.Font = new System.Drawing.Font("メイリオ", 14F, System.Drawing.FontStyle.Bold);
+        this.lblTitle.ForeColor = System.Drawing.Color.White;
+        this.lblTitle.Location = new System.Drawing.Point(4, 4);
+        this.lblTitle.Name = "lblTitle";
+        this.lblTitle.Size = new System.Drawing.Size(792, 36);
+        this.lblTitle.TabIndex = 0;
+        this.lblTitle.Text = "＊＊ 計量票入力 ＊＊";
+        this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        // 
+        // tlpHeader (集計日行)
+        // 
+        this.tlpHeader.BackColor = System.Drawing.Color.FromArgb(245, 245, 250);
+        this.tlpHeader.ColumnCount = 5;
+        this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+        this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+        this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+        this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+        this.tlpHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+        this.tlpHeader.Controls.Add(this.lblColDate, 0, 0);
+        this.tlpHeader.Controls.Add(this.lblAccDate, 1, 0);
+        this.tlpHeader.Controls.Add(this.lblBranch, 2, 0);
+        this.tlpHeader.Controls.Add(this.lblTransType, 3, 0);
+        this.tlpHeader.Controls.Add(this.lblScaleNo, 4, 0);
+        this.tlpHeader.Controls.Add(this.dtpCollectDate, 0, 1);
+        this.tlpHeader.Controls.Add(this.dtpAccountDate, 1, 1);
+        this.tlpHeader.Controls.Add(this.pnlBranch, 2, 1);
+        this.tlpHeader.Controls.Add(this.pnlTransType, 3, 1);
+        this.tlpHeader.Controls.Add(this.txtScaleNo, 4, 1);
+        this.tlpHeader.Dock = System.Windows.Forms.DockStyle.Top;
+        this.tlpHeader.Location = new System.Drawing.Point(4, 40);
+        this.tlpHeader.Name = "tlpHeader";
+        this.tlpHeader.RowCount = 2;
+        this.tlpHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+        this.tlpHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+        this.tlpHeader.Size = new System.Drawing.Size(792, 60);
+        this.tlpHeader.TabIndex = 1;
+        // ── tlpHeader ラベル ──
+        this.lblColDate.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblColDate.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
+        this.lblColDate.Text = "集計日";
+        this.lblColDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.lblColDate.Name = "lblColDate";
+        this.lblAccDate.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblAccDate.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
+        this.lblAccDate.Text = "計上日";
+        this.lblAccDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.lblAccDate.Name = "lblAccDate";
+        this.lblBranch.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblBranch.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
+        this.lblBranch.Text = "営業所";
+        this.lblBranch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.lblBranch.Name = "lblBranch";
+        this.lblTransType.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblTransType.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
+        this.lblTransType.Text = "取引区分";
+        this.lblTransType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.lblTransType.Name = "lblTransType";
+        this.lblScaleNo.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblScaleNo.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold);
+        this.lblScaleNo.Text = "スケールNo.";
+        this.lblScaleNo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.lblScaleNo.Name = "lblScaleNo";
+        // ── 集計日行 入力コントロール ──
+        this.dtpCollectDate.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.dtpCollectDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+        this.dtpCollectDate.Name = "dtpCollectDate";
+        this.dtpAccountDate.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.dtpAccountDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+        this.dtpAccountDate.Name = "dtpAccountDate";
+        // pnlBranch
+        this.pnlBranch.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.pnlBranch.Controls.Add(this.lblBranchName);
+        this.pnlBranch.Controls.Add(this.txtBranchCode);
+        this.pnlBranch.Name = "pnlBranch";
+        this.txtBranchCode.Dock = System.Windows.Forms.DockStyle.Left;
+        this.txtBranchCode.Width = 40;
+        this.txtBranchCode.Name = "txtBranchCode";
+        this.lblBranchName.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblBranchName.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+        this.lblBranchName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        this.lblBranchName.Name = "lblBranchName";
+        // pnlTransType
+        this.pnlTransType.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.pnlTransType.Controls.Add(this.lblTransTypeName);
+        this.pnlTransType.Controls.Add(this.cmbTransType);
+        this.pnlTransType.Name = "pnlTransType";
+        this.cmbTransType.Dock = System.Windows.Forms.DockStyle.Left;
+        this.cmbTransType.Width = 40;
+        this.cmbTransType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this.cmbTransType.Name = "cmbTransType";
+        this.lblTransTypeName.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblTransTypeName.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+        this.lblTransTypeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        this.lblTransTypeName.Name = "lblTransTypeName";
+        // txtScaleNo
+        this.txtScaleNo.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.txtScaleNo.ReadOnly = true;
+        this.txtScaleNo.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+        this.txtScaleNo.Name = "txtScaleNo";
+        // 
+        // tlpSupplier (取引先行)
+        // 
+        this.tlpSupplier.BackColor = System.Drawing.Color.FromArgb(250, 250, 255);
+        this.tlpSupplier.ColumnCount = 6;
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+        this.tlpSupplier.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+        this.tlpSupplier.Controls.Add(this.lblSupplierHd, 0, 0);
+        this.tlpSupplier.Controls.Add(this.lblSupplierNameHd, 1, 0);
+        this.tlpSupplier.Controls.Add(this.lblCarrierHd, 2, 0);
+        this.tlpSupplier.Controls.Add(this.lblCarNoHd, 3, 0);
+        this.tlpSupplier.Controls.Add(this.lblPayTypeHd, 4, 0);
+        this.tlpSupplier.Controls.Add(this.lblStaffHd, 5, 0);
+        this.tlpSupplier.Controls.Add(this.txtSupplierCode, 0, 1);
+        this.tlpSupplier.Controls.Add(this.lblSupplierName, 1, 1);
+        this.tlpSupplier.Controls.Add(this.pnlCarrier, 2, 1);
+        this.tlpSupplier.Controls.Add(this.txtCarNo, 3, 1);
+        this.tlpSupplier.Controls.Add(this.pnlPayType, 4, 1);
+        this.tlpSupplier.Controls.Add(this.txtStaffCode, 5, 1);
+        this.tlpSupplier.Dock = System.Windows.Forms.DockStyle.Top;
+        this.tlpSupplier.Location = new System.Drawing.Point(4, 100);
+        this.tlpSupplier.Name = "tlpSupplier";
+        this.tlpSupplier.RowCount = 2;
+        this.tlpSupplier.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+        this.tlpSupplier.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+        this.tlpSupplier.Size = new System.Drawing.Size(792, 60);
+        this.tlpSupplier.TabIndex = 2;
+        // ── tlpSupplier ラベル ──
+        this.lblSupplierHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblSupplierHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblSupplierHd.Text = "取引先"; this.lblSupplierHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblSupplierHd.Name = "lblSupplierHd";
+        this.lblSupplierNameHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblSupplierNameHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblSupplierNameHd.Text = "取引先名"; this.lblSupplierNameHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblSupplierNameHd.Name = "lblSupplierNameHd";
+        this.lblCarrierHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblCarrierHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblCarrierHd.Text = "運送"; this.lblCarrierHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblCarrierHd.Name = "lblCarrierHd";
+        this.lblCarNoHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblCarNoHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblCarNoHd.Text = "車番"; this.lblCarNoHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblCarNoHd.Name = "lblCarNoHd";
+        this.lblPayTypeHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblPayTypeHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblPayTypeHd.Text = "支払区分"; this.lblPayTypeHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblPayTypeHd.Name = "lblPayTypeHd";
+        this.lblStaffHd.Dock = System.Windows.Forms.DockStyle.Fill; this.lblStaffHd.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Bold); this.lblStaffHd.Text = "担当"; this.lblStaffHd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; this.lblStaffHd.Name = "lblStaffHd";
+        // ── 取引先行 入力コントロール ──
+        this.txtSupplierCode.Dock = System.Windows.Forms.DockStyle.Fill; this.txtSupplierCode.Name = "txtSupplierCode"; this.txtSupplierCode.Leave += new System.EventHandler(this.txtSupplierCode_Leave);
+        this.lblSupplierName.Dock = System.Windows.Forms.DockStyle.Fill; this.lblSupplierName.BackColor = System.Drawing.Color.FromArgb(240, 240, 240); this.lblSupplierName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft; this.lblSupplierName.Name = "lblSupplierName";
+        // pnlCarrier
+        this.pnlCarrier.Dock = System.Windows.Forms.DockStyle.Fill; this.pnlCarrier.Controls.Add(this.lblCarrierName); this.pnlCarrier.Controls.Add(this.txtCarrierCode); this.pnlCarrier.Name = "pnlCarrier";
+        this.txtCarrierCode.Dock = System.Windows.Forms.DockStyle.Left; this.txtCarrierCode.Width = 50; this.txtCarrierCode.Name = "txtCarrierCode";
+        this.lblCarrierName.Dock = System.Windows.Forms.DockStyle.Fill; this.lblCarrierName.BackColor = System.Drawing.Color.FromArgb(240, 240, 240); this.lblCarrierName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft; this.lblCarrierName.Name = "lblCarrierName";
+        this.txtCarNo.Dock = System.Windows.Forms.DockStyle.Fill; this.txtCarNo.Name = "txtCarNo";
+        // pnlPayType
+        this.pnlPayType.Dock = System.Windows.Forms.DockStyle.Fill; this.pnlPayType.Controls.Add(this.lblPaymentTypeName); this.pnlPayType.Controls.Add(this.cmbPaymentType); this.pnlPayType.Name = "pnlPayType";
+        this.cmbPaymentType.Dock = System.Windows.Forms.DockStyle.Left; this.cmbPaymentType.Width = 30; this.cmbPaymentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; this.cmbPaymentType.Name = "cmbPaymentType";
+        this.lblPaymentTypeName.Dock = System.Windows.Forms.DockStyle.Fill; this.lblPaymentTypeName.BackColor = System.Drawing.Color.FromArgb(240, 240, 240); this.lblPaymentTypeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft; this.lblPaymentTypeName.Name = "lblPaymentTypeName";
+        this.txtStaffCode.Dock = System.Windows.Forms.DockStyle.Fill; this.txtStaffCode.Name = "txtStaffCode";
+        // 
+        // dgvDetails
+        // 
+        this.dgvDetails.AllowUserToAddRows = false;
+        this.dgvDetails.AllowUserToDeleteRows = false;
+        this.dgvDetails.BackgroundColor = System.Drawing.Color.White;
+        this.dgvDetails.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        this.dgvDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        this.dgvDetails.ColumnHeadersHeight = 36;
+        this.dgvDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.dgvDetails.MultiSelect = false;
+        this.dgvDetails.Name = "dgvDetails";
+        this.dgvDetails.RowHeadersVisible = false;
+        this.dgvDetails.RowTemplate.Height = 36;
+        this.dgvDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        this.dgvDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        this.dgvDetails.TabIndex = 3;
+        // 
+        // pnlTotal
+        // 
+        this.pnlTotal.BackColor = System.Drawing.Color.FromArgb(230, 240, 255);
+        this.pnlTotal.Controls.Add(this.lblTotalPayment);
+        this.pnlTotal.Controls.Add(this.lblTotalAmount);
+        this.pnlTotal.Controls.Add(this.lblTotalCount);
+        this.pnlTotal.Controls.Add(this.lblTotalQuantity);
+        this.pnlTotal.Controls.Add(this.lblTotalCaption);
+        this.pnlTotal.Dock = System.Windows.Forms.DockStyle.Bottom;
+        this.pnlTotal.Location = new System.Drawing.Point(4, 878);
+        this.pnlTotal.Name = "pnlTotal";
+        this.pnlTotal.Size = new System.Drawing.Size(792, 36);
+        this.pnlTotal.TabIndex = 4;
+        // ── 合計ラベル ──
+        this.lblTotalCaption.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold); this.lblTotalCaption.Location = new System.Drawing.Point(0, 0); this.lblTotalCaption.Size = new System.Drawing.Size(260, 36); this.lblTotalCaption.Text = "【合　計】"; this.lblTotalCaption.TextAlign = System.Drawing.ContentAlignment.MiddleRight; this.lblTotalCaption.Name = "lblTotalCaption";
+        this.lblTotalQuantity.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold); this.lblTotalQuantity.Location = new System.Drawing.Point(265, 0); this.lblTotalQuantity.Size = new System.Drawing.Size(90, 36); this.lblTotalQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight; this.lblTotalQuantity.Name = "lblTotalQuantity";
+        this.lblTotalCount.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold); this.lblTotalCount.Location = new System.Drawing.Point(360, 0); this.lblTotalCount.Size = new System.Drawing.Size(60, 36); this.lblTotalCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight; this.lblTotalCount.Name = "lblTotalCount";
+        this.lblTotalAmount.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold); this.lblTotalAmount.Location = new System.Drawing.Point(495, 0); this.lblTotalAmount.Size = new System.Drawing.Size(90, 36); this.lblTotalAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight; this.lblTotalAmount.Name = "lblTotalAmount";
+        this.lblTotalPayment.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold); this.lblTotalPayment.Location = new System.Drawing.Point(590, 0); this.lblTotalPayment.Size = new System.Drawing.Size(90, 36); this.lblTotalPayment.TextAlign = System.Drawing.ContentAlignment.MiddleRight; this.lblTotalPayment.Name = "lblTotalPayment";
+        // 
+        // pnlButtons
+        // 
+        this.pnlButtons.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+        this.pnlButtons.Controls.Add(this.btnPrintReceipt);
+        this.pnlButtons.Controls.Add(this.btnPrintShipping);
+        this.pnlButtons.Controls.Add(this.btnClear);
+        this.pnlButtons.Controls.Add(this.btnRegister);
+        this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+        this.pnlButtons.Location = new System.Drawing.Point(4, 914);
+        this.pnlButtons.Name = "pnlButtons";
+        this.pnlButtons.Size = new System.Drawing.Size(792, 70);
+        this.pnlButtons.TabIndex = 5;
+        // ── ボタン ──
+        this.btnRegister.BackColor = System.Drawing.Color.FromArgb(0, 122, 204); this.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnRegister.Font = new System.Drawing.Font("メイリオ", 14F, System.Drawing.FontStyle.Bold); this.btnRegister.ForeColor = System.Drawing.Color.White; this.btnRegister.Location = new System.Drawing.Point(10, 5); this.btnRegister.Name = "btnRegister"; this.btnRegister.Size = new System.Drawing.Size(180, 60); this.btnRegister.Text = "登録"; this.btnRegister.UseVisualStyleBackColor = false; this.btnRegister.FlatAppearance.BorderSize = 0; this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
+        this.btnClear.BackColor = System.Drawing.Color.FromArgb(100, 100, 100); this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnClear.Font = new System.Drawing.Font("メイリオ", 14F, System.Drawing.FontStyle.Bold); this.btnClear.ForeColor = System.Drawing.Color.White; this.btnClear.Location = new System.Drawing.Point(200, 5); this.btnClear.Name = "btnClear"; this.btnClear.Size = new System.Drawing.Size(120, 60); this.btnClear.Text = "クリア"; this.btnClear.UseVisualStyleBackColor = false; this.btnClear.FlatAppearance.BorderSize = 0; this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+        this.btnPrintShipping.BackColor = System.Drawing.Color.FromArgb(0, 150, 80); this.btnPrintShipping.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnPrintShipping.Font = new System.Drawing.Font("メイリオ", 14F, System.Drawing.FontStyle.Bold); this.btnPrintShipping.ForeColor = System.Drawing.Color.White; this.btnPrintShipping.Location = new System.Drawing.Point(330, 5); this.btnPrintShipping.Name = "btnPrintShipping"; this.btnPrintShipping.Size = new System.Drawing.Size(180, 60); this.btnPrintShipping.Text = "仕切書印刷"; this.btnPrintShipping.UseVisualStyleBackColor = false; this.btnPrintShipping.FlatAppearance.BorderSize = 0; this.btnPrintShipping.Click += new System.EventHandler(this.btnPrintShipping_Click);
+        this.btnPrintReceipt.BackColor = System.Drawing.Color.FromArgb(150, 80, 0); this.btnPrintReceipt.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnPrintReceipt.Font = new System.Drawing.Font("メイリオ", 14F, System.Drawing.FontStyle.Bold); this.btnPrintReceipt.ForeColor = System.Drawing.Color.White; this.btnPrintReceipt.Location = new System.Drawing.Point(520, 5); this.btnPrintReceipt.Name = "btnPrintReceipt"; this.btnPrintReceipt.Size = new System.Drawing.Size(180, 60); this.btnPrintReceipt.Text = "検収票印刷"; this.btnPrintReceipt.UseVisualStyleBackColor = false; this.btnPrintReceipt.FlatAppearance.BorderSize = 0; this.btnPrintReceipt.Click += new System.EventHandler(this.btnPrintReceipt_Click);
+        // 
+        // MeasurementTicketForm
+        // 
+        this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        this.BackColor = System.Drawing.Color.White;
+        this.ClientSize = new System.Drawing.Size(800, 984);
+        this.Controls.Add(this.dgvDetails);
+        this.Controls.Add(this.tlpSupplier);
+        this.Controls.Add(this.tlpHeader);
+        this.Controls.Add(this.lblTitle);
+        this.Controls.Add(this.pnlTotal);
+        this.Controls.Add(this.pnlButtons);
+        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        this.Name = "MeasurementTicketForm";
+        this.Padding = new System.Windows.Forms.Padding(4);
+        this.Text = "計量票入力";
+        this.tlpHeader.ResumeLayout(false);
+        this.pnlBranch.ResumeLayout(false);
+        this.pnlBranch.PerformLayout();
+        this.pnlTransType.ResumeLayout(false);
+        this.tlpSupplier.ResumeLayout(false);
+        this.pnlCarrier.ResumeLayout(false);
+        this.pnlCarrier.PerformLayout();
+        this.pnlPayType.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)(this.dgvDetails)).EndInit();
+        this.pnlTotal.ResumeLayout(false);
+        this.pnlButtons.ResumeLayout(false);
+        this.ResumeLayout(false);
+    }
+
+    private System.Windows.Forms.Label lblTitle;
+    private System.Windows.Forms.TableLayoutPanel tlpHeader;
+    private System.Windows.Forms.Label lblColDate;
+    private System.Windows.Forms.Label lblAccDate;
+    private System.Windows.Forms.Label lblBranch;
+    private System.Windows.Forms.Label lblTransType;
+    private System.Windows.Forms.Label lblScaleNo;
+    private System.Windows.Forms.DateTimePicker dtpCollectDate;
+    private System.Windows.Forms.DateTimePicker dtpAccountDate;
+    private System.Windows.Forms.Panel pnlBranch;
+    private System.Windows.Forms.TextBox txtBranchCode;
+    private System.Windows.Forms.Label lblBranchName;
+    private System.Windows.Forms.Panel pnlTransType;
+    private System.Windows.Forms.ComboBox cmbTransType;
+    private System.Windows.Forms.Label lblTransTypeName;
+    private System.Windows.Forms.TextBox txtScaleNo;
+    private System.Windows.Forms.TableLayoutPanel tlpSupplier;
+    private System.Windows.Forms.Label lblSupplierHd;
+    private System.Windows.Forms.Label lblSupplierNameHd;
+    private System.Windows.Forms.Label lblCarrierHd;
+    private System.Windows.Forms.Label lblCarNoHd;
+    private System.Windows.Forms.Label lblPayTypeHd;
+    private System.Windows.Forms.Label lblStaffHd;
+    private System.Windows.Forms.TextBox txtSupplierCode;
+    private System.Windows.Forms.Label lblSupplierName;
+    private System.Windows.Forms.Panel pnlCarrier;
+    private System.Windows.Forms.TextBox txtCarrierCode;
+    private System.Windows.Forms.Label lblCarrierName;
+    private System.Windows.Forms.TextBox txtCarNo;
+    private System.Windows.Forms.Panel pnlPayType;
+    private System.Windows.Forms.ComboBox cmbPaymentType;
+    private System.Windows.Forms.Label lblPaymentTypeName;
+    private System.Windows.Forms.TextBox txtStaffCode;
+    private System.Windows.Forms.DataGridView dgvDetails;
+    private System.Windows.Forms.Panel pnlTotal;
+    private System.Windows.Forms.Label lblTotalCaption;
+    private System.Windows.Forms.Label lblTotalQuantity;
+    private System.Windows.Forms.Label lblTotalCount;
+    private System.Windows.Forms.Label lblTotalAmount;
+    private System.Windows.Forms.Label lblTotalPayment;
+    private System.Windows.Forms.Panel pnlButtons;
+    private System.Windows.Forms.Button btnRegister;
+    private System.Windows.Forms.Button btnClear;
+    private System.Windows.Forms.Button btnPrintShipping;
+    private System.Windows.Forms.Button btnPrintReceipt;
+}

@@ -1,0 +1,285 @@
+using ScaleLink.Models;
+using ScaleLink.Services;
+
+namespace ScaleLink.Forms;
+
+/// <summary>重量表示・商品選択フォーム</summary>
+public partial class WeightInputForm : Form
+{
+    private readonly MeasurementTicketForm _ticketForm;
+    private readonly SupplierSelectorForm _selector;
+    private readonly string _supplierCode;
+    private ProductModel? _selectedProduct;
+    private bool _isManualMode = false;
+    private bool _isFrequentExpanded = true;
+    private bool _isOtherExpanded = false;
+
+    private sealed class ProductListItem(ProductModel product)
+    {
+        public ProductModel Product { get; } = product;
+        public override string ToString() => Product.Name;
+    }
+
+    public WeightInputForm(MeasurementTicketForm ticketForm,
+        SupplierSelectorForm selector, string supplierCode)
+    {
+        _ticketForm = ticketForm;
+        _selector = selector;
+        _supplierCode = supplierCode;
+        InitializeComponent();
+        LoadProductButtons();
+        ApplySectionVisibility();
+        SubscribeWeightEvents();
+    }
+
+    // ─── 商品リスト読み込み ────────────────────────────────
+    private void LoadProductButtons()
+    {
+        lstFrequentProducts.Items.Clear();
+        lstOtherProducts.Items.Clear();
+
+        var frequentProducts = MasterDataService.Instance.FrequentProducts;
+        var otherProducts = MasterDataService.Instance.OtherProducts;
+
+        foreach (var p in frequentProducts)
+            lstFrequentProducts.Items.Add(new ProductListItem(p));
+
+        foreach (var p in otherProducts)
+            lstOtherProducts.Items.Add(new ProductListItem(p));
+    }
+
+    private void SelectProduct(ProductModel product)
+    {
+        _selectedProduct = product;
+        _selector.UpdateSupplierState(_supplierCode, SupplierButtonState.Weighing);
+    }
+
+    // ─── 商品選択 ──────────────────────────────────────────
+    private void lstFrequentProducts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (lstFrequentProducts.SelectedItem is not ProductListItem item) return;
+        if (lstOtherProducts.SelectedIndex >= 0)
+            lstOtherProducts.ClearSelected();
+        SelectProduct(item.Product);
+    }
+
+    private void lstOtherProducts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (lstOtherProducts.SelectedItem is not ProductListItem item) return;
+        if (lstFrequentProducts.SelectedIndex >= 0)
+            lstFrequentProducts.ClearSelected();
+        SelectProduct(item.Product);
+    }
+
+    private void ClearProductSelection()
+    {
+        _selectedProduct = null;
+        lstFrequentProducts.ClearSelected();
+        lstOtherProducts.ClearSelected();
+    }
+
+    // ─── 重量確定ボタン ────────────────────────────────────
+    private void btnConfirmWeight_Click(object sender, EventArgs e)
+    {
+        if (_selectedProduct is null)
+        {
+            MessageBox.Show("商品を選択してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        decimal weight;
+        if (_isManualMode)
+        {
+            if (!decimal.TryParse(txtManualWeight.Text, out weight) || weight <= 0)
+            {
+                MessageBox.Show("重量は数値で入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+        else
+        {
+            var status = SerialPortService.Instance.Status;
+            if (status == WeightStatus.Error || status == WeightStatus.Disconnected)
+            {
+                MessageBox.Show("重量が正常に受信できていません。手入力してください。", "受信エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SetManualMode(true);
+                return;
+            }
+            weight = SerialPortService.Instance.LastWeight;
+            if (weight <= 0)
+            {
+                MessageBox.Show("重量が0です。計量を確認してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+        if (!_ticketForm.SetDetail(_selectedProduct, weight))
+        {
+            MessageBox.Show("明細行が満杯です。登録してください。", "満杯", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        _ticketForm.MoveDetailFocusToNextRow();
+        ClearProductSelection();
+        txtManualWeight.Text = string.Empty;
+        SetManualMode(false);
+        _selector.UpdateSupplierState(_supplierCode, SupplierButtonState.Inputting);
+    }
+
+    // ─── テンキーパッドボタン ─────────────────────────────
+    private void btnNumPad_Click(object sender, EventArgs e)
+    {
+        SetManualMode(true);
+        using var numPad = new Dialogs.NumPadForm(txtManualWeight.Text);
+        if (numPad.ShowDialog(this) == DialogResult.OK)
+            txtManualWeight.Text = numPad.InputValue;
+    }
+
+    // ─── 手入力テキストボックス クリック ──────────────────
+    private void txtManualWeight_Click(object sender, EventArgs e) => SetManualMode(true);
+
+    private void txtManualWeight_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != '\b')
+            e.Handled = true;
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if ((keyData & (Keys.Control | Keys.Alt)) != Keys.None)
+            return base.ProcessCmdKey(ref msg, keyData);
+
+        if (TryHandleManualWeightKey(keyData))
+            return true;
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private bool TryHandleManualWeightKey(Keys keyData)
+    {
+        var keyCode = keyData & Keys.KeyCode;
+
+        if (keyCode is >= Keys.D0 and <= Keys.D9)
+        {
+            AppendManualWeightCharacter((char)('0' + (keyCode - Keys.D0)));
+            return true;
+        }
+
+        if (keyCode is >= Keys.NumPad0 and <= Keys.NumPad9)
+        {
+            AppendManualWeightCharacter((char)('0' + (keyCode - Keys.NumPad0)));
+            return true;
+        }
+
+        if (keyCode == Keys.Decimal || keyCode == Keys.OemPeriod)
+        {
+            AppendManualWeightCharacter('.');
+            return true;
+        }
+
+        if (keyCode == Keys.Back)
+        {
+            RemoveManualWeightCharacter();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void AppendManualWeightCharacter(char inputChar)
+    {
+        SetManualMode(true);
+        txtManualWeight.Focus();
+
+        if (inputChar == '.' && txtManualWeight.Text.Contains('.'))
+            return;
+
+        var selectionStart = txtManualWeight.SelectionStart;
+        var selectionLength = txtManualWeight.SelectionLength;
+        var newText = txtManualWeight.Text.Remove(selectionStart, selectionLength)
+            .Insert(selectionStart, inputChar.ToString());
+
+        txtManualWeight.Text = newText;
+        txtManualWeight.SelectionStart = selectionStart + 1;
+        txtManualWeight.SelectionLength = 0;
+    }
+
+    private void RemoveManualWeightCharacter()
+    {
+        SetManualMode(true);
+        txtManualWeight.Focus();
+
+        var selectionStart = txtManualWeight.SelectionStart;
+        var selectionLength = txtManualWeight.SelectionLength;
+
+        if (selectionLength > 0)
+        {
+            txtManualWeight.Text = txtManualWeight.Text.Remove(selectionStart, selectionLength);
+            txtManualWeight.SelectionStart = selectionStart;
+            return;
+        }
+
+        if (selectionStart <= 0 || txtManualWeight.Text.Length == 0)
+            return;
+
+        txtManualWeight.Text = txtManualWeight.Text.Remove(selectionStart - 1, 1);
+        txtManualWeight.SelectionStart = selectionStart - 1;
+    }
+
+    // ─── RS-232C重量受信 ──────────────────────────────────
+    private void SubscribeWeightEvents() =>
+        SerialPortService.Instance.WeightReceived += OnWeightReceived;
+
+    private void OnWeightReceived(object? sender, WeightReceivedEventArgs e)
+    {
+        if (InvokeRequired) { Invoke(() => OnWeightReceived(sender, e)); return; }
+        if (_isManualMode) return;
+        lblCurrentWeight.Text = e.Weight.ToString("#,##0.0");
+        (lblWeightStatus.Text, lblWeightStatus.ForeColor) = e.Status switch
+        {
+            WeightStatus.Stable => ("● 安定", Color.LimeGreen),
+            WeightStatus.Unstable => ("▲ 計量中", Color.Orange),
+            WeightStatus.Error => ("? 受信エラー", Color.Red),
+            WeightStatus.Disconnected => ("─ 未接続", Color.Gray),
+            _ => ("─ 未接続", Color.Gray),
+        };
+        btnConfirmWeight.Enabled = e.Status == WeightStatus.Stable;
+    }
+
+    // ─── 手入力モード切替 ─────────────────────────────────
+    private void SetManualMode(bool manual)
+    {
+        _isManualMode = manual;
+        txtManualWeight.Enabled = manual;
+        btnConfirmWeight.Enabled = true;
+        if (manual)
+        {
+            lblWeightStatus.Text = "● 手入力モード";
+            lblWeightStatus.ForeColor = Color.Cyan;
+        }
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        SerialPortService.Instance.WeightReceived -= OnWeightReceived;
+        base.OnClosed(e);
+    }
+
+    private void lblFrequentTitle_Click(object sender, EventArgs e)
+    {
+        _isFrequentExpanded = !_isFrequentExpanded;
+        ApplySectionVisibility();
+    }
+
+    private void lblSeparator_Click(object sender, EventArgs e)
+    {
+        _isOtherExpanded = !_isOtherExpanded;
+        ApplySectionVisibility();
+    }
+
+    private void ApplySectionVisibility()
+    {
+        lstFrequentProducts.Visible = _isFrequentExpanded;
+        lstOtherProducts.Visible = _isOtherExpanded;
+
+        lblFrequentTitle.Text = _isFrequentExpanded ? "▼ よく使う品目" : "? よく使う品目";
+        lblSeparator.Text = _isOtherExpanded ? "▼ その他の品目" : "? その他の品目";
+    }
+}

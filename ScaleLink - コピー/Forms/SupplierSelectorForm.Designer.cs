@@ -1,0 +1,125 @@
+namespace ScaleLink.Forms;
+
+partial class SupplierSelectorForm
+{
+    private System.ComponentModel.IContainer components = null;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components != null))
+            components.Dispose();
+        base.Dispose(disposing);
+    }
+
+    private void InitializeComponent()
+    {
+        this.components = new System.ComponentModel.Container();
+        this.pnlAdd = new System.Windows.Forms.Panel();
+        this.btnAdd = new System.Windows.Forms.Button();
+        this.pnlList = new System.Windows.Forms.Panel();
+        this.lblEmpty = new System.Windows.Forms.Label();
+        this.pnlExit = new System.Windows.Forms.Panel();
+        this.btnExit = new System.Windows.Forms.Button();
+        this.pnlAdd.SuspendLayout();
+        this.pnlList.SuspendLayout();
+        this.pnlExit.SuspendLayout();
+        this.SuspendLayout();
+        // 
+        // pnlAdd
+        // 
+        this.pnlAdd.BackColor = System.Drawing.Color.Transparent;
+        this.pnlAdd.Controls.Add(this.btnAdd);
+        this.pnlAdd.Dock = System.Windows.Forms.DockStyle.Top;
+        this.pnlAdd.Location = new System.Drawing.Point(0, 0);
+        this.pnlAdd.Name = "pnlAdd";
+        this.pnlAdd.Size = new System.Drawing.Size(90, 80);
+        this.pnlAdd.TabIndex = 0;
+        // 
+        // btnAdd
+        // 
+        this.btnAdd.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
+        this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        this.btnAdd.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold);
+        this.btnAdd.ForeColor = System.Drawing.Color.White;
+        this.btnAdd.Location = new System.Drawing.Point(5, 5);
+        this.btnAdd.Name = "btnAdd";
+        this.btnAdd.Size = new System.Drawing.Size(80, 70);
+        this.btnAdd.TabIndex = 0;
+        this.btnAdd.Text = "＋\n追加";
+        this.btnAdd.UseVisualStyleBackColor = false;
+        this.btnAdd.FlatAppearance.BorderSize = 0;
+        this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+        // 
+        // pnlList
+        // 
+        this.pnlList.AutoScroll = true;
+        this.pnlList.BackColor = System.Drawing.Color.Transparent;
+        this.pnlList.Controls.Add(this.lblEmpty);
+        this.pnlList.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.pnlList.Location = new System.Drawing.Point(0, 80);
+        this.pnlList.Name = "pnlList";
+        this.pnlList.Size = new System.Drawing.Size(90, 864);
+        this.pnlList.TabIndex = 1;
+        // 
+        // lblEmpty
+        // 
+        this.lblEmpty.Dock = System.Windows.Forms.DockStyle.Fill;
+        this.lblEmpty.Font = new System.Drawing.Font("メイリオ", 9F);
+        this.lblEmpty.ForeColor = System.Drawing.Color.Gray;
+        this.lblEmpty.Location = new System.Drawing.Point(0, 0);
+        this.lblEmpty.Name = "lblEmpty";
+        this.lblEmpty.Size = new System.Drawing.Size(90, 864);
+        this.lblEmpty.TabIndex = 0;
+        this.lblEmpty.Text = "業者\nなし";
+        this.lblEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        // 
+        // pnlExit
+        // 
+        this.pnlExit.BackColor = System.Drawing.Color.Transparent;
+        this.pnlExit.Controls.Add(this.btnExit);
+        this.pnlExit.Dock = System.Windows.Forms.DockStyle.Bottom;
+        this.pnlExit.Location = new System.Drawing.Point(0, 944);
+        this.pnlExit.Name = "pnlExit";
+        this.pnlExit.Size = new System.Drawing.Size(90, 80);
+        this.pnlExit.TabIndex = 2;
+        // 
+        // btnExit
+        // 
+        this.btnExit.BackColor = System.Drawing.Color.FromArgb(160, 30, 30);
+        this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        this.btnExit.Font = new System.Drawing.Font("メイリオ", 10F, System.Drawing.FontStyle.Bold);
+        this.btnExit.ForeColor = System.Drawing.Color.White;
+        this.btnExit.Location = new System.Drawing.Point(5, 5);
+        this.btnExit.Name = "btnExit";
+        this.btnExit.Size = new System.Drawing.Size(80, 70);
+        this.btnExit.TabIndex = 0;
+        this.btnExit.Text = "終了";
+        this.btnExit.UseVisualStyleBackColor = false;
+        this.btnExit.FlatAppearance.BorderSize = 0;
+        this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+        // 
+        // SupplierSelectorForm
+        // 
+        this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        this.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
+        this.ClientSize = new System.Drawing.Size(90, 1024);
+        this.Controls.Add(this.pnlList);
+        this.Controls.Add(this.pnlAdd);
+        this.Controls.Add(this.pnlExit);
+        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        this.Name = "SupplierSelectorForm";
+        this.Text = "業者選択";
+        this.pnlAdd.ResumeLayout(false);
+        this.pnlList.ResumeLayout(false);
+        this.pnlExit.ResumeLayout(false);
+        this.ResumeLayout(false);
+    }
+
+    private System.Windows.Forms.Panel pnlAdd;
+    private System.Windows.Forms.Button btnAdd;
+    private System.Windows.Forms.Panel pnlList;
+    private System.Windows.Forms.Label lblEmpty;
+    private System.Windows.Forms.Panel pnlExit;
+    private System.Windows.Forms.Button btnExit;
+}

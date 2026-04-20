@@ -1,0 +1,589 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+using Microsoft.Data.Sqlite;
+
+namespace ScaleLink.Forms;
+
+/// <summary>計量票入力フォーム</summary>
+public class MeasurementTicketForm : Form
+{
+    private readonly SupplierModel _supplier;
+    private readonly SupplierSelectorForm _selector;
+
+    public event EventHandler<int>? RegistrationCompleted;
+    public bool HasUnsavedData => GetFilledRowCount() > 0;
+
+    // ── ヘッダーコントロール ──
+    private TableLayoutPanel _tlpHeader = null!;
+    private TableLayoutPanel _tlpSupplier = null!;
+    private DateTimePicker _dtpCollectDate = null!;
+    private DateTimePicker _dtpAccountDate = null!;
+    private TextBox _txtBranchCode = null!;
+    private Label _lblBranchName = null!;
+    private ComboBox _cmbTransType = null!;
+    private Label _lblTransTypeName = null!;
+    private TextBox _txtScaleNo = null!;
+    private TextBox _txtSupplierCode = null!;
+    private Label _lblSupplierName = null!;
+    private TextBox _txtCarrierCode = null!;
+    private Label _lblCarrierName = null!;
+    private TextBox _txtCarNo = null!;
+    private ComboBox _cmbPaymentType = null!;
+    private Label _lblPaymentTypeName = null!;
+    private TextBox _txtStaffCode = null!;
+
+    // ── 明細グリッド ──
+    private DataGridView _dgvDetails = null!;
+
+    // ── 合計 ──
+    private Panel _pnlTotal = null!;
+    private Label _lblTotalQuantity = null!;
+    private Label _lblTotalCount = null!;
+    private Label _lblTotalAmount = null!;
+    private Label _lblTotalPayment = null!;
+
+    // ── 操作ボタン ──
+    private Panel _pnlButtons = null!;
+    private Button _btnRegister = null!;
+    private Button _btnClear = null!;
+    private Button _btnPrintShipping = null!;
+    private Button _btnPrintReceipt = null!;
+
+    private const int MaxRows = 12;
+
+    public MeasurementTicketForm(SupplierModel supplier, SupplierSelectorForm selector)
+    {
+        _supplier = supplier;
+        _selector = selector;
+        InitializeComponent();
+        SetSupplierDefaults();
+    }
+
+    // ─── UI構築 ────────────────────────────────────────────
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+        BackColor = Color.White;
+        Padding   = new Padding(4);
+
+        // タイトルラベル
+        var lblTitle = new Label
+        {
+            Text      = "＊＊ 計量票入力 ＊＊",
+            Font      = new Font("メイリオ", 14f, FontStyle.Bold),
+            Dock      = DockStyle.Top,
+            Height    = 36,
+            TextAlign = ContentAlignment.MiddleCenter,
+            BackColor = Color.FromArgb(0, 122, 204),
+            ForeColor = Color.White,
+        };
+
+        BuildHeaderPanel();
+        BuildSupplierPanel();
+        BuildGrid();
+        BuildTotalPanel();
+        BuildButtonPanel();
+
+        Controls.Add(_pnlButtons);
+        Controls.Add(_pnlTotal);
+        Controls.Add(_dgvDetails);
+        Controls.Add(_tlpSupplier);
+        Controls.Add(_tlpHeader);
+        Controls.Add(lblTitle);
+
+        ResumeLayout(false);
+    }
+
+    // ─── 集計日行 ──────────────────────────────────────────
+    private void BuildHeaderPanel()
+    {
+        _tlpHeader = new TableLayoutPanel
+        {
+            Dock        = DockStyle.Top,
+            Height      = 60,
+            ColumnCount = 5,
+            RowCount    = 2,
+            BackColor   = Color.FromArgb(245, 245, 250),
+        };
+        _tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
+        _tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+        _tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
+        _tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
+        _tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
+        _tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
+        _tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,  100));
+
+        string[] titles = ["集計日", "計上日", "営業所", "取引区分", "スケールNo."];
+        for (int i = 0; i < titles.Length; i++)
+            _tlpHeader.Controls.Add(MakeTitleLabel(titles[i]), i, 0);
+
+        _dtpCollectDate = new DateTimePicker { Format = DateTimePickerFormat.Short, Dock = DockStyle.Fill };
+        _dtpAccountDate = new DateTimePicker { Format = DateTimePickerFormat.Short, Dock = DockStyle.Fill };
+
+        var pnlBranch = MakeCodeNamePanel(out _txtBranchCode, out _lblBranchName, 40);
+        var pnlTrans  = MakeCodeComboPanel(out _cmbTransType, out _lblTransTypeName, 40);
+        _txtScaleNo   = new TextBox { ReadOnly = true, Dock = DockStyle.Fill, BackColor = Color.FromArgb(240, 240, 240) };
+
+        _tlpHeader.Controls.Add(_dtpCollectDate, 0, 1);
+        _tlpHeader.Controls.Add(_dtpAccountDate, 1, 1);
+        _tlpHeader.Controls.Add(pnlBranch,       2, 1);
+        _tlpHeader.Controls.Add(pnlTrans,         3, 1);
+        _tlpHeader.Controls.Add(_txtScaleNo,      4, 1);
+    }
+
+    // ─── 取引先行 ──────────────────────────────────────────
+    private void BuildSupplierPanel()
+    {
+        _tlpSupplier = new TableLayoutPanel
+        {
+            Dock        = DockStyle.Top,
+            Height      = 60,
+            ColumnCount = 6,
+            RowCount    = 2,
+            BackColor   = Color.FromArgb(250, 250, 255),
+        };
+        _tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
+        _tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
+        _tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,  100));
+
+        string[] titles = ["取引先", "取引先名", "運送", "車番", "支払区分", "担当"];
+        for (int i = 0; i < titles.Length; i++)
+            _tlpSupplier.Controls.Add(MakeTitleLabel(titles[i]), i, 0);
+
+        _txtSupplierCode = new TextBox { Dock = DockStyle.Fill };
+        _txtSupplierCode.Leave += OnSupplierCodeLeave;
+
+        _lblSupplierName = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft,
+            BackColor = Color.FromArgb(240, 240, 240) };
+
+        var pnlCarrier = MakeCodeNamePanel(out _txtCarrierCode, out _lblCarrierName, 50);
+
+        _txtCarNo    = new TextBox { Dock = DockStyle.Fill };
+        var pnlPay   = MakeCodeComboPanel(out _cmbPaymentType, out _lblPaymentTypeName, 30);
+        _txtStaffCode = new TextBox { Dock = DockStyle.Fill };
+
+        _tlpSupplier.Controls.Add(_txtSupplierCode, 0, 1);
+        _tlpSupplier.Controls.Add(_lblSupplierName, 1, 1);
+        _tlpSupplier.Controls.Add(pnlCarrier,       2, 1);
+        _tlpSupplier.Controls.Add(_txtCarNo,         3, 1);
+        _tlpSupplier.Controls.Add(pnlPay,            4, 1);
+        _tlpSupplier.Controls.Add(_txtStaffCode,     5, 1);
+    }
+
+    // ─── 明細グリッド ──────────────────────────────────────
+    private void BuildGrid()
+    {
+        _dgvDetails = new DataGridView
+        {
+            Dock                    = DockStyle.Fill,
+            AllowUserToAddRows      = false,
+            AllowUserToDeleteRows   = false,
+            MultiSelect             = false,
+            SelectionMode           = DataGridViewSelectionMode.FullRowSelect,
+            RowHeadersVisible       = false,
+            BackgroundColor         = Color.White,
+            BorderStyle             = BorderStyle.None,
+            ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
+            ColumnHeadersHeight     = 36,
+        };
+        _dgvDetails.RowTemplate.Height = 36;
+
+        _dgvDetails.Columns.AddRange(
+            MakeCol("colNo",          "No",     35,  false, DataGridViewContentAlignment.MiddleCenter),
+            MakeCol("colCode",        "コード", 60,  true,  DataGridViewContentAlignment.MiddleCenter),
+            MakeCol("colProductName", "品名",   160, false, DataGridViewContentAlignment.MiddleLeft),
+            MakeCol("colQuantity",    "数量",   90,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colCount",       "本数",   60,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colUnitPrice",   "単価",   75,  true,  DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colAmount",      "金額",   90,  false, DataGridViewContentAlignment.MiddleRight),
+            MakeCol("colPayment",     "支払額", 90,  false, DataGridViewContentAlignment.MiddleRight)
+        );
+
+        // 12行を空行で初期化
+        for (int i = 0; i < MaxRows; i++)
+        {
+            _dgvDetails.Rows.Add(i + 1, "", "", "", "", "", "", "");
+            SetReadOnlyRowStyle(i);
+        }
+
+        _dgvDetails.CellValueChanged += OnCellValueChanged;
+        _dgvDetails.CellEndEdit      += (_, _) => RecalcTotals();
+    }
+
+    // ─── 合計パネル ────────────────────────────────────────
+    private void BuildTotalPanel()
+    {
+        _pnlTotal = new Panel
+        {
+            Dock      = DockStyle.Bottom,
+            Height    = 36,
+            BackColor = Color.FromArgb(230, 240, 255),
+        };
+
+        var lblTitle = new Label
+        {
+            Text      = "【合　計】",
+            Font      = new Font("メイリオ", 10f, FontStyle.Bold),
+            Width     = 260,
+            Height    = 36,
+            Left      = 0,
+            TextAlign = ContentAlignment.MiddleRight,
+        };
+
+        _lblTotalQuantity = MakeTotalLabel(270);
+        _lblTotalCount    = MakeTotalLabel(370);
+        _lblTotalAmount   = MakeTotalLabel(510);
+        _lblTotalPayment  = MakeTotalLabel(610);
+
+        _pnlTotal.Controls.AddRange([lblTitle,
+            _lblTotalQuantity, _lblTotalCount,
+            _lblTotalAmount,   _lblTotalPayment]);
+    }
+
+    // ─── 操作ボタンパネル ─────────────────────────────────
+    private void BuildButtonPanel()
+    {
+        _pnlButtons = new Panel
+        {
+            Dock      = DockStyle.Bottom,
+            Height    = 70,
+            BackColor = Color.FromArgb(245, 245, 245),
+        };
+
+        _btnRegister      = MakeActionButton("登録",       Color.FromArgb(0, 122, 204),  10,  180);
+        _btnClear         = MakeActionButton("クリア",     Color.FromArgb(100, 100, 100), 200, 120);
+        _btnPrintShipping = MakeActionButton("仕切書印刷", Color.FromArgb(0, 150, 80),   330, 180);
+        _btnPrintReceipt  = MakeActionButton("検収票印刷", Color.FromArgb(150, 80, 0),   520, 180);
+
+        _btnRegister.Click      += OnRegisterClicked;
+        _btnClear.Click         += OnClearClicked;
+        _btnPrintShipping.Click += (_, _) => MessageBox.Show("仕切書印刷（未実装）");
+        _btnPrintReceipt.Click  += (_, _) => MessageBox.Show("検収票印刷（未実装）");
+
+        _pnlButtons.Controls.AddRange([
+            _btnRegister, _btnClear, _btnPrintShipping, _btnPrintReceipt]);
+    }
+
+    // ─── 業者デフォルト設定 ───────────────────────────────
+    private void SetSupplierDefaults()
+    {
+        _dtpCollectDate.Value       = DateTime.Today;
+        _dtpAccountDate.Value       = DateTime.Today;
+        _txtSupplierCode.Text       = _supplier.Code;
+        _lblSupplierName.Text       = _supplier.Name;
+        _txtScaleNo.Text            = "1";
+    }
+
+    // ─── WeightInputForm からの転記 ───────────────────────
+    /// <summary>商品・重量を次の空き明細行にセットする</summary>
+    public bool SetDetail(ProductModel product, decimal weight)
+    {
+        int emptyRow = FindNextEmptyRow();
+        if (emptyRow < 0) return false;
+
+        var row = _dgvDetails.Rows[emptyRow];
+        row.Cells["colCode"].Value        = product.Code;
+        row.Cells["colProductName"].Value = product.Name;
+        row.Cells["colQuantity"].Value    = weight.ToString("#,##0.0");
+        row.Cells["colUnitPrice"].Value   = product.UnitPrice.ToString("#,##0.00");
+        RecalcRow(emptyRow, product);
+        RecalcTotals();
+        return true;
+    }
+
+    // ─── 自動計算 ──────────────────────────────────────────
+    private void OnCellValueChanged(object? sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex < 0) return;
+        var col = _dgvDetails.Columns[e.ColumnIndex].Name;
+        if (col is "colQuantity" or "colUnitPrice")
+            RecalcRowByIndex(e.RowIndex);
+    }
+
+    private void RecalcRowByIndex(int rowIndex)
+    {
+        var row = _dgvDetails.Rows[rowIndex];
+        decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+        decimal.TryParse(row.Cells["colUnitPrice"].Value?.ToString(), out var price);
+        var amount  = Math.Floor(qty * price);
+        row.Cells["colAmount"].Value  = amount.ToString("#,##0");
+        row.Cells["colPayment"].Value = amount.ToString("#,##0"); // 暫定：支払額 = 金額
+        RecalcTotals();
+    }
+
+    private void RecalcRow(int rowIndex, ProductModel product)
+    {
+        var row = _dgvDetails.Rows[rowIndex];
+        decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+        var amount  = Math.Floor(qty * product.UnitPrice);
+        var payment = Math.Floor(qty * product.PaymentUnitPrice);
+        row.Cells["colAmount"].Value  = amount.ToString("#,##0");
+        row.Cells["colPayment"].Value = payment.ToString("#,##0");
+    }
+
+    private void RecalcTotals()
+    {
+        decimal totalQty = 0, totalAmount = 0, totalPayment = 0;
+        int totalCount = 0;
+
+        foreach (DataGridViewRow row in _dgvDetails.Rows)
+        {
+            decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+            int.TryParse(row.Cells["colCount"].Value?.ToString(),        out var cnt);
+            decimal.TryParse(row.Cells["colAmount"].Value?.ToString(),   out var amt);
+            decimal.TryParse(row.Cells["colPayment"].Value?.ToString(),  out var pay);
+            totalQty     += qty;
+            totalCount   += cnt;
+            totalAmount  += amt;
+            totalPayment += pay;
+        }
+
+        _lblTotalQuantity.Text = totalQty.ToString("#,##0.0");
+        _lblTotalCount.Text    = totalCount.ToString("#,##0");
+        _lblTotalAmount.Text   = totalAmount.ToString("#,##0");
+        _lblTotalPayment.Text  = totalPayment.ToString("#,##0");
+    }
+
+    // ─── 登録 ──────────────────────────────────────────────
+    private void OnRegisterClicked(object? sender, EventArgs e)
+    {
+        if (GetFilledRowCount() == 0)
+        {
+            MessageBox.Show("明細が入力されていません。", "確認",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try
+        {
+            SaveToDatabase();
+            MessageBox.Show("登録が完了しました。", "完了",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            RegistrationCompleted?.Invoke(this, _supplier.Id);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"登録エラー:\n{ex.Message}", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void SaveToDatabase()
+    {
+        var conn = DatabaseService.Instance.Connection;
+        using var tx = conn.BeginTransaction();
+
+        decimal.TryParse(_lblTotalQuantity.Text, out var tq);
+        int.TryParse(_lblTotalCount.Text,         out var tc);
+        decimal.TryParse(_lblTotalAmount.Text,    out var ta);
+        decimal.TryParse(_lblTotalPayment.Text,   out var tp);
+
+        using var cmdH = conn.CreateCommand();
+        cmdH.Transaction = tx;
+        cmdH.CommandText = """
+            INSERT INTO t_measurement_ticket
+              (collect_date, account_date, branch_code, transaction_type, scale_no,
+               supplier_code, carrier_code, car_no, payment_type, staff_code,
+               total_quantity, total_count, total_amount, total_payment)
+            VALUES
+              ($cd, $ad, $bc, $tt, $sn, $sc, $cc, $cn, $pt, $stf, $tq, $tc, $ta, $tp);
+            """;
+        cmdH.Parameters.AddWithValue("$cd",  _dtpCollectDate.Value.ToString("yyyy-MM-dd"));
+        cmdH.Parameters.AddWithValue("$ad",  _dtpAccountDate.Value.ToString("yyyy-MM-dd"));
+        cmdH.Parameters.AddWithValue("$bc",  _txtBranchCode.Text);
+        cmdH.Parameters.AddWithValue("$tt",  _cmbTransType.Text);
+        cmdH.Parameters.AddWithValue("$sn",  _txtScaleNo.Text);
+        cmdH.Parameters.AddWithValue("$sc",  _txtSupplierCode.Text);
+        cmdH.Parameters.AddWithValue("$cc",  _txtCarrierCode.Text);
+        cmdH.Parameters.AddWithValue("$cn",  _txtCarNo.Text);
+        cmdH.Parameters.AddWithValue("$pt",  _cmbPaymentType.Text);
+        cmdH.Parameters.AddWithValue("$stf", _txtStaffCode.Text);
+        cmdH.Parameters.AddWithValue("$tq",  tq);
+        cmdH.Parameters.AddWithValue("$tc",  tc);
+        cmdH.Parameters.AddWithValue("$ta",  ta);
+        cmdH.Parameters.AddWithValue("$tp",  tp);
+        cmdH.ExecuteNonQuery();
+
+        using var cmdId = conn.CreateCommand();
+        cmdId.Transaction = tx;
+        cmdId.CommandText = "SELECT last_insert_rowid()";
+        long ticketId = (long)(cmdId.ExecuteScalar() ?? 0L);
+
+        foreach (DataGridViewRow row in _dgvDetails.Rows)
+        {
+            var code = row.Cells["colCode"].Value?.ToString() ?? "";
+            if (string.IsNullOrWhiteSpace(code)) continue;
+
+            decimal.TryParse(row.Cells["colQuantity"].Value?.ToString(), out var qty);
+            int.TryParse(row.Cells["colCount"].Value?.ToString(),        out var cnt);
+            decimal.TryParse(row.Cells["colUnitPrice"].Value?.ToString(), out var up);
+            decimal.TryParse(row.Cells["colAmount"].Value?.ToString(),   out var amt);
+            decimal.TryParse(row.Cells["colPayment"].Value?.ToString(),  out var pay);
+
+            using var cmdD = conn.CreateCommand();
+            cmdD.Transaction = tx;
+            cmdD.CommandText = """
+                INSERT INTO t_measurement_detail
+                  (ticket_id, no, code, product_name, quantity, count, unit_price, amount, payment)
+                VALUES
+                  ($tid, $no, $cd, $pn, $qty, $cnt, $up, $amt, $pay);
+                """;
+            cmdD.Parameters.AddWithValue("$tid", ticketId);
+            cmdD.Parameters.AddWithValue("$no",  row.Cells["colNo"].Value);
+            cmdD.Parameters.AddWithValue("$cd",  code);
+            cmdD.Parameters.AddWithValue("$pn",  row.Cells["colProductName"].Value?.ToString() ?? "");
+            cmdD.Parameters.AddWithValue("$qty", qty);
+            cmdD.Parameters.AddWithValue("$cnt", cnt);
+            cmdD.Parameters.AddWithValue("$up",  up);
+            cmdD.Parameters.AddWithValue("$amt", amt);
+            cmdD.Parameters.AddWithValue("$pay", pay);
+            cmdD.ExecuteNonQuery();
+        }
+
+        tx.Commit();
+    }
+
+    // ─── クリア ────────────────────────────────────────────
+    private void OnClearClicked(object? sender, EventArgs e)
+    {
+        if (GetFilledRowCount() > 0)
+        {
+            var r = MessageBox.Show("入力内容をクリアしますか？", "確認",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (r != DialogResult.Yes) return;
+        }
+        ClearAll();
+    }
+
+    private void ClearAll()
+    {
+        for (int i = 0; i < MaxRows; i++)
+        {
+            var row = _dgvDetails.Rows[i];
+            row.Cells["colCode"].Value        = "";
+            row.Cells["colProductName"].Value = "";
+            row.Cells["colQuantity"].Value    = "";
+            row.Cells["colCount"].Value       = "";
+            row.Cells["colUnitPrice"].Value   = "";
+            row.Cells["colAmount"].Value      = "";
+            row.Cells["colPayment"].Value     = "";
+        }
+        RecalcTotals();
+    }
+
+    // ─── 取引先コード入力 ─────────────────────────────────
+    private void OnSupplierCodeLeave(object? sender, EventArgs e)
+    {
+        var found = Services.MasterDataService.Instance.Suppliers
+            .FirstOrDefault(s => s.Code == _txtSupplierCode.Text);
+        _lblSupplierName.Text = found?.Name ?? "";
+    }
+
+    // ─── ユーティリティ ───────────────────────────────────
+    private int FindNextEmptyRow()
+    {
+        for (int i = 0; i < MaxRows; i++)
+            if (string.IsNullOrWhiteSpace(_dgvDetails.Rows[i].Cells["colCode"].Value?.ToString()))
+                return i;
+        return -1;
+    }
+
+    private int GetFilledRowCount() =>
+        _dgvDetails.Rows.Cast<DataGridViewRow>()
+            .Count(r => !string.IsNullOrWhiteSpace(r.Cells["colCode"].Value?.ToString()));
+
+    private void SetReadOnlyRowStyle(int i)
+    {
+        var grayStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(240, 240, 240) };
+        _dgvDetails.Rows[i].Cells["colNo"].Style           = grayStyle;
+        _dgvDetails.Rows[i].Cells["colProductName"].Style  = grayStyle;
+        _dgvDetails.Rows[i].Cells["colAmount"].Style       = grayStyle;
+        _dgvDetails.Rows[i].Cells["colPayment"].Style      = grayStyle;
+    }
+
+    private static DataGridViewTextBoxColumn MakeCol(
+        string name, string header, int width, bool editable,
+        DataGridViewContentAlignment align)
+    {
+        return new DataGridViewTextBoxColumn
+        {
+            Name           = name,
+            HeaderText     = header,
+            Width          = width,
+            ReadOnly       = !editable,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = align },
+            HeaderCell     = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+        };
+    }
+
+    private static Label MakeTitleLabel(string text) => new()
+    {
+        Text      = text,
+        Dock      = DockStyle.Fill,
+        TextAlign = ContentAlignment.MiddleCenter,
+        Font      = new Font("メイリオ", 9f, FontStyle.Bold),
+        ForeColor = Color.FromArgb(60, 60, 60),
+    };
+
+    private static Label MakeTotalLabel(int left) => new()
+    {
+        Width     = 90,
+        Height    = 36,
+        Left      = left,
+        TextAlign = ContentAlignment.MiddleRight,
+        Font      = new Font("メイリオ", 10f, FontStyle.Bold),
+    };
+
+    private static Panel MakeCodeNamePanel(out TextBox code, out Label name, int codeWidth)
+    {
+        var pnl = new Panel { Dock = DockStyle.Fill };
+        code = new TextBox { Width = codeWidth, Dock = DockStyle.Left };
+        name = new Label
+        {
+            Dock      = DockStyle.Fill,
+            TextAlign = ContentAlignment.MiddleLeft,
+            BackColor = Color.FromArgb(240, 240, 240),
+        };
+        pnl.Controls.Add(name);
+        pnl.Controls.Add(code);
+        return pnl;
+    }
+
+    private static Panel MakeCodeComboPanel(out ComboBox combo, out Label name, int comboWidth)
+    {
+        var pnl = new Panel { Dock = DockStyle.Fill };
+        combo = new ComboBox { Width = comboWidth, Dock = DockStyle.Left, DropDownStyle = ComboBoxStyle.DropDownList };
+        name = new Label
+        {
+            Dock      = DockStyle.Fill,
+            TextAlign = ContentAlignment.MiddleLeft,
+            BackColor = Color.FromArgb(240, 240, 240),
+        };
+        pnl.Controls.Add(name);
+        pnl.Controls.Add(combo);
+        return pnl;
+    }
+
+    private static Button MakeActionButton(string text, Color backColor, int left, int width)
+    {
+        var btn = new Button
+        {
+            Text      = text,
+            Left      = left,
+            Top       = 5,
+            Width     = width,
+            Height    = 60,
+            Font      = new Font("メイリオ", 14f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = backColor,
+            ForeColor = Color.White,
+        };
+        btn.FlatAppearance.BorderSize = 0;
+        return btn;
+    }
+}

@@ -1,0 +1,405 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+
+namespace ScaleLink.Forms;
+
+/// <summary>重量表示・商品選択フォーム</summary>
+public class WeightInputForm : Form
+{
+    private readonly MeasurementTicketForm _ticketForm;
+    private readonly SupplierSelectorForm _selector;
+    private readonly int _supplierId;
+
+    // 重量表示エリア
+    private Panel _pnlWeight = null!;
+    private Label _lblWeightTitle = null!;
+    private Label _lblCurrentWeight = null!;
+    private Label _lblWeightUnit = null!;
+    private Label _lblWeightStatus = null!;
+    private Panel _pnlManualInput = null!;
+    private Label _lblManualTitle = null!;
+    private TextBox _txtManualWeight = null!;
+    private Button _btnNumPad = null!;
+    private Button _btnConfirmWeight = null!;
+
+    // 商品選択エリア
+    private Panel _pnlProductList = null!;
+    private Label _lblFrequentTitle = null!;
+    private FlowLayoutPanel _flpFrequent = null!;
+    private Label _lblSeparator = null!;
+    private FlowLayoutPanel _flpAllProducts = null!;
+
+    private ProductModel? _selectedProduct;
+    private bool _isManualMode = false;
+
+    public WeightInputForm(MeasurementTicketForm ticketForm,
+        SupplierSelectorForm selector, int supplierId)
+    {
+        _ticketForm  = ticketForm;
+        _selector    = selector;
+        _supplierId  = supplierId;
+
+        InitializeComponent();
+        LoadProductButtons();
+        SubscribeWeightEvents();
+    }
+
+    // ─── UI構築 ────────────────────────────────────────────
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+        BackColor = Color.FromArgb(50, 50, 55);
+
+        // ── 重量表示パネル（上 330px）──
+        _pnlWeight = new Panel
+        {
+            Dock      = DockStyle.Top,
+            Height    = 330,
+            BackColor = Color.FromArgb(40, 40, 45),
+            Padding   = new Padding(8),
+        };
+
+        _lblWeightTitle = new Label
+        {
+            Text      = "受信重量",
+            ForeColor = Color.LightGray,
+            Font      = new Font("メイリオ", 12f),
+            Dock      = DockStyle.Top,
+            Height    = 30,
+            TextAlign = ContentAlignment.MiddleCenter,
+        };
+
+        _lblCurrentWeight = new Label
+        {
+            Text      = "---",
+            ForeColor = Color.LimeGreen,
+            Font      = new Font("メイリオ", 48f, FontStyle.Bold),
+            Dock      = DockStyle.Top,
+            Height    = 90,
+            TextAlign = ContentAlignment.MiddleRight,
+        };
+
+        _lblWeightUnit = new Label
+        {
+            Text      = "kg",
+            ForeColor = Color.LightGray,
+            Font      = new Font("メイリオ", 24f),
+            Dock      = DockStyle.Top,
+            Height    = 36,
+            TextAlign = ContentAlignment.MiddleRight,
+        };
+
+        _lblWeightStatus = new Label
+        {
+            Text      = "─ 未接続",
+            ForeColor = Color.Gray,
+            Font      = new Font("メイリオ", 10f),
+            Dock      = DockStyle.Top,
+            Height    = 24,
+            TextAlign = ContentAlignment.MiddleCenter,
+        };
+
+        // 手入力エリア
+        _pnlManualInput = new Panel
+        {
+            Dock      = DockStyle.Top,
+            Height    = 50,
+            BackColor = Color.Transparent,
+        };
+        _lblManualTitle = new Label
+        {
+            Text      = "重量手入力",
+            ForeColor = Color.LightGray,
+            Font      = new Font("メイリオ", 9f),
+            Width     = 80,
+            Height    = 40,
+            Left      = 4,
+            Top       = 5,
+            TextAlign = ContentAlignment.MiddleLeft,
+        };
+        _txtManualWeight = new TextBox
+        {
+            Font      = new Font("メイリオ", 16f),
+            Width     = 160,
+            Height    = 36,
+            Left      = 88,
+            Top       = 7,
+            TextAlign = HorizontalAlignment.Right,
+        };
+        _txtManualWeight.Click  += (_, _) => SetManualMode(true);
+        _txtManualWeight.KeyPress += OnManualWeightKeyPress;
+
+        _btnNumPad = new Button
+        {
+            Text      = "🔢",
+            Width     = 44,
+            Height    = 36,
+            Left      = 254,
+            Top       = 7,
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(60, 60, 70),
+            ForeColor = Color.White,
+        };
+        _btnNumPad.FlatAppearance.BorderSize = 0;
+        _btnNumPad.Click += OnNumPadClicked;
+
+        _pnlManualInput.Controls.AddRange([_lblManualTitle, _txtManualWeight, _btnNumPad]);
+
+        _btnConfirmWeight = new Button
+        {
+            Text      = "重量確定",
+            Dock      = DockStyle.Top,
+            Height    = 70,
+            Font      = new Font("メイリオ", 18f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(0, 122, 204),
+            ForeColor = Color.White,
+        };
+        _btnConfirmWeight.FlatAppearance.BorderSize = 0;
+        _btnConfirmWeight.Click += OnConfirmWeightClicked;
+
+        // 逆順で DockStyle.Top に追加
+        _pnlWeight.Controls.Add(_btnConfirmWeight);
+        _pnlWeight.Controls.Add(_pnlManualInput);
+        _pnlWeight.Controls.Add(_lblWeightStatus);
+        _pnlWeight.Controls.Add(_lblWeightUnit);
+        _pnlWeight.Controls.Add(_lblCurrentWeight);
+        _pnlWeight.Controls.Add(_lblWeightTitle);
+
+        // ── 商品選択パネル（残り Fill）──
+        _pnlProductList = new Panel
+        {
+            Dock      = DockStyle.Fill,
+            BackColor = Color.FromArgb(50, 50, 55),
+            Padding   = new Padding(4),
+        };
+
+        _lblFrequentTitle = new Label
+        {
+            Text      = "▼ よく使う品目",
+            ForeColor = Color.LightGray,
+            Font      = new Font("メイリオ", 10f, FontStyle.Bold),
+            Dock      = DockStyle.Top,
+            Height    = 28,
+        };
+
+        _flpFrequent = new FlowLayoutPanel
+        {
+            Dock          = DockStyle.Top,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents  = false,
+            AutoSize      = true,
+            BackColor     = Color.Transparent,
+        };
+
+        _lblSeparator = new Label
+        {
+            Text      = "▼ その他の品目",
+            ForeColor = Color.LightGray,
+            Font      = new Font("メイリオ", 10f, FontStyle.Bold),
+            Dock      = DockStyle.Top,
+            Height    = 28,
+        };
+
+        _flpAllProducts = new FlowLayoutPanel
+        {
+            Dock          = DockStyle.Fill,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents  = false,
+            AutoScroll    = true,
+            BackColor     = Color.Transparent,
+        };
+
+        _pnlProductList.Controls.Add(_flpAllProducts);
+        _pnlProductList.Controls.Add(_lblSeparator);
+        _pnlProductList.Controls.Add(_flpFrequent);
+        _pnlProductList.Controls.Add(_lblFrequentTitle);
+
+        Controls.Add(_pnlProductList);
+        Controls.Add(_pnlWeight);
+
+        ResumeLayout(false);
+    }
+
+    // ─── 商品ボタン生成 ────────────────────────────────────
+    private void LoadProductButtons()
+    {
+        var products = Services.MasterDataService.Instance.Products;
+
+        foreach (var p in products.Where(x => x.IsFrequent))
+            _flpFrequent.Controls.Add(CreateProductButton(p, Color.FromArgb(255, 255, 220)));
+
+        foreach (var p in products.Where(x => !x.IsFrequent))
+            _flpAllProducts.Controls.Add(CreateProductButton(p, Color.White));
+    }
+
+    private Button CreateProductButton(ProductModel product, Color backColor)
+    {
+        var btn = new Button
+        {
+            Text      = product.Name,
+            Width     = 360,
+            Height    = 65,
+            Font      = new Font("メイリオ", 14f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = backColor,
+            ForeColor = Color.Black,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Tag       = product,
+            Margin    = new Padding(2),
+        };
+        btn.FlatAppearance.BorderColor = Color.LightGray;
+        btn.Click += OnProductButtonClicked;
+        return btn;
+    }
+
+    // ─── 商品選択 ──────────────────────────────────────────
+    private void OnProductButtonClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+        if (btn.Tag is not ProductModel product) return;
+
+        // 前の選択を解除
+        ClearProductSelection();
+
+        _selectedProduct  = product;
+        btn.BackColor     = Color.SkyBlue;
+
+        _selector.UpdateSupplierState(_supplierId, SupplierButtonState.Weighing);
+    }
+
+    private void ClearProductSelection()
+    {
+        _selectedProduct = null;
+        foreach (Control c in _flpFrequent.Controls)
+            if (c is Button b && b.Tag is ProductModel p)
+                b.BackColor = Color.FromArgb(255, 255, 220);
+
+        foreach (Control c in _flpAllProducts.Controls)
+            if (c is Button b && b.Tag is ProductModel)
+                b.BackColor = Color.White;
+    }
+
+    // ─── 重量確定 ──────────────────────────────────────────
+    private void OnConfirmWeightClicked(object? sender, EventArgs e)
+    {
+        if (_selectedProduct is null)
+        {
+            MessageBox.Show("商品を選択してください。", "確認",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        decimal weight;
+        if (_isManualMode)
+        {
+            if (!decimal.TryParse(_txtManualWeight.Text, out weight) || weight <= 0)
+            {
+                MessageBox.Show("重量は数値で入力してください。", "入力エラー",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+        else
+        {
+            var status = SerialPortService.Instance.Status;
+            if (status == WeightStatus.Error || status == WeightStatus.Disconnected)
+            {
+                MessageBox.Show("重量が正常に受信できていません。手入力してください。", "受信エラー",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SetManualMode(true);
+                return;
+            }
+
+            weight = SerialPortService.Instance.LastWeight;
+            if (weight <= 0)
+            {
+                MessageBox.Show("重量が0です。計量を確認してください。", "確認",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+
+        // 計量票フォームへ転記
+        bool ok = _ticketForm.SetDetail(_selectedProduct, weight);
+        if (!ok)
+        {
+            MessageBox.Show("明細行が満杯です。登録してください。", "満杯",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        // リセット
+        ClearProductSelection();
+        _txtManualWeight.Text = string.Empty;
+        SetManualMode(false);
+
+        _selector.UpdateSupplierState(_supplierId, SupplierButtonState.Inputting);
+    }
+
+    // ─── 重量受信イベント ─────────────────────────────────
+    private void SubscribeWeightEvents()
+    {
+        SerialPortService.Instance.WeightReceived += OnWeightReceived;
+    }
+
+    private void OnWeightReceived(object? sender, WeightReceivedEventArgs e)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(() => OnWeightReceived(sender, e));
+            return;
+        }
+
+        if (_isManualMode) return;
+
+        _lblCurrentWeight.Text = e.Weight.ToString("#,##0.0");
+
+        (_lblWeightStatus.Text, _lblWeightStatus.ForeColor) = e.Status switch
+        {
+            WeightStatus.Stable      => ("● 安定",     Color.LimeGreen),
+            WeightStatus.Unstable    => ("▲ 計量中",   Color.Orange),
+            WeightStatus.Error       => ("✕ 受信エラー", Color.Red),
+            WeightStatus.Disconnected => ("─ 未接続",   Color.Gray),
+            _ => ("─ 未接続", Color.Gray),
+        };
+
+        _btnConfirmWeight.Enabled = e.Status == WeightStatus.Stable;
+    }
+
+    // ─── 手入力モード切替 ─────────────────────────────────
+    private void SetManualMode(bool manual)
+    {
+        _isManualMode = manual;
+        _txtManualWeight.Enabled    = manual;
+        _btnConfirmWeight.Enabled   = true;
+
+        if (manual)
+        {
+            _lblWeightStatus.Text      = "● 手入力モード";
+            _lblWeightStatus.ForeColor = Color.Cyan;
+        }
+    }
+
+    private void OnManualWeightKeyPress(object? sender, KeyPressEventArgs e)
+    {
+        // 数字・小数点・バックスペース以外は無効
+        if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != '\b')
+            e.Handled = true;
+    }
+
+    // ─── テンキーパッド ───────────────────────────────────
+    private void OnNumPadClicked(object? sender, EventArgs e)
+    {
+        SetManualMode(true);
+        using var numPad = new Dialogs.NumPadForm(_txtManualWeight.Text);
+        if (numPad.ShowDialog(this) == DialogResult.OK)
+            _txtManualWeight.Text = numPad.InputValue;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        SerialPortService.Instance.WeightReceived -= OnWeightReceived;
+        base.OnClosed(e);
+    }
+}

@@ -1,0 +1,137 @@
+﻿using System.Drawing.Printing;
+
+namespace ScaleLink.Forms;
+
+/// <summary>検収票プレビューダイアログ</summary>
+public partial class ReceiptPreviewDialog : Form
+{
+    private Image? _receiptImage;
+
+    public ReceiptPreviewDialog(Image receiptImage)
+    {
+        _receiptImage = receiptImage;
+        InitializeComponent();
+        LoadImage();
+    }
+
+    public ReceiptPreviewDialog(string imageFilePath)
+    {
+        InitializeComponent();
+        LoadImage(imageFilePath);
+    }
+
+    private void LoadImage()
+    {
+        if (_receiptImage != null)
+        {
+            picPreview.Image = _receiptImage;
+        }
+    }
+
+    private void LoadImage(string filePath)
+    {
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                _receiptImage = Image.FromFile(filePath);
+                picPreview.Image = _receiptImage;
+            }
+            else
+            {
+                MessageBox.Show($"画像ファイルが見つかりません:\n{filePath}", "エラー",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"画像の読み込みに失敗しました:\n{ex.Message}", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void btnPrint_Click(object sender, EventArgs e)
+    {
+        if (_receiptImage == null)
+        {
+            MessageBox.Show("印刷する画像がありません。", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try
+        {
+            using var printDocument = new PrintDocument();
+            printDocument.PrintPage += PrintDocument_PrintPage;
+
+            using var printDialog = new PrintDialog
+            {
+                Document = printDocument
+            };
+
+            if (printDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                printDocument.Print();
+                MessageBox.Show("印刷を開始しました。", "印刷",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"印刷エラー:\n{ex.Message}", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
+    {
+        if (_receiptImage == null || e.Graphics == null)
+            return;
+
+        // 用紙サイズに合わせて画像を配置
+        var pageRect = e.PageBounds;
+        var imageRect = GetScaledImageRectangle(_receiptImage.Size, pageRect.Size);
+
+        // 画像を中央に配置して印刷
+        var x = (pageRect.Width - imageRect.Width) / 2;
+        var y = (pageRect.Height - imageRect.Height) / 2;
+
+        e.Graphics.DrawImage(_receiptImage, x, y, imageRect.Width, imageRect.Height);
+    }
+
+    private Rectangle GetScaledImageRectangle(Size imageSize, Size pageSize)
+    {
+        // アスペクト比を維持しながら用紙サイズに収まるようにスケーリング
+        float imageAspect = (float)imageSize.Width / imageSize.Height;
+        float pageAspect = (float)pageSize.Width / pageSize.Height;
+
+        int width, height;
+
+        if (imageAspect > pageAspect)
+        {
+            // 画像が横長の場合
+            width = pageSize.Width;
+            height = (int)(pageSize.Width / imageAspect);
+        }
+        else
+        {
+            // 画像が縦長の場合
+            height = pageSize.Height;
+            width = (int)(pageSize.Height * imageAspect);
+        }
+
+        return new Rectangle(0, 0, width, height);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            components?.Dispose();
+            _receiptImage?.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+}

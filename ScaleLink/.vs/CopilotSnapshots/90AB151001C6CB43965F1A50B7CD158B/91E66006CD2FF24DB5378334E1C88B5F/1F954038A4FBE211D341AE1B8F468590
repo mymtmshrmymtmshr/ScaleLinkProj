@@ -1,0 +1,41 @@
+﻿namespace ScaleLink.Dialogs;
+
+/// <summary>テンキーパッドダイアログ</summary>
+public partial class NumPadForm : Form
+{
+    public string InputValue => txtDisplay.Text;
+
+    public NumPadForm(string initialValue = "")
+    {
+        InitializeComponent();
+        txtDisplay.Text = initialValue;
+    }
+
+    private void NumKey_Click(object sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+        switch (btn.Text)
+        {
+            case "OK":
+                if (decimal.TryParse(txtDisplay.Text, out _))
+                { DialogResult = DialogResult.OK; Close(); }
+                else
+                    MessageBox.Show("有効な数値を入力してください。");
+                break;
+            case "C":
+                txtDisplay.Text = "";
+                break;
+            case "◀":
+                if (txtDisplay.Text.Length > 0)
+                    txtDisplay.Text = txtDisplay.Text[..^1];
+                break;
+            case ".":
+                if (!txtDisplay.Text.Contains('.'))
+                    txtDisplay.Text += ".";
+                break;
+            default:
+                txtDisplay.Text += btn.Text;
+                break;
+        }
+    }
+}

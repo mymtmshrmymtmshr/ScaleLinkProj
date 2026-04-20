@@ -1,0 +1,442 @@
+﻿namespace ScaleLink.Dialogs;
+
+partial class TempRegistrationSearchDialog
+{
+    private System.ComponentModel.IContainer components = null;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components != null))
+            components.Dispose();
+        base.Dispose(disposing);
+    }
+
+    private void InitializeComponent()
+    {
+        DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+        DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+        DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+        DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+        DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+        lblTitle = new Label();
+        pnlSearchCondition = new Panel();
+        tlpCondition = new TableLayoutPanel();
+        lblCollectDate = new Label();
+        dtpCollectDateFrom = new DateTimePicker();
+        lblCollectDateTo = new Label();
+        dtpCollectDateTo = new DateTimePicker();
+        lblAccountDate = new Label();
+        dtpAccountDateFrom = new DateTimePicker();
+        lblAccountDateTo = new Label();
+        dtpAccountDateTo = new DateTimePicker();
+        lblCarNo = new Label();
+        txtCarNo = new TextBox();
+        lblSupplierCode = new Label();
+        txtSupplierCode = new TextBox();
+        pnlButtons1 = new Panel();
+        btnClear = new Button();
+        btnSearch = new Button();
+        dgvResults = new DataGridView();
+        colCollectDate = new DataGridViewTextBoxColumn();
+        colAccountDate = new DataGridViewTextBoxColumn();
+        colSupplierCode = new DataGridViewTextBoxColumn();
+        colCarNo = new DataGridViewTextBoxColumn();
+        colScaleNo = new DataGridViewTextBoxColumn();
+        pnlButtons2 = new Panel();
+        btnCancel = new Button();
+        btnOk = new Button();
+        pnlSearchCondition.SuspendLayout();
+        tlpCondition.SuspendLayout();
+        pnlButtons1.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvResults).BeginInit();
+        pnlButtons2.SuspendLayout();
+        SuspendLayout();
+        // 
+        // lblTitle
+        // 
+        lblTitle.BackColor = Color.FromArgb(0, 122, 204);
+        lblTitle.Dock = DockStyle.Top;
+        lblTitle.Font = new Font("メイリオ", 14F, FontStyle.Bold);
+        lblTitle.ForeColor = Color.White;
+        lblTitle.Location = new Point(0, 0);
+        lblTitle.Name = "lblTitle";
+        lblTitle.Size = new Size(800, 40);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "仮登録検索";
+        lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // pnlSearchCondition
+        // 
+        pnlSearchCondition.BackColor = Color.FromArgb(245, 245, 250);
+        pnlSearchCondition.Controls.Add(tlpCondition);
+        pnlSearchCondition.Dock = DockStyle.Top;
+        pnlSearchCondition.Location = new Point(0, 40);
+        pnlSearchCondition.Name = "pnlSearchCondition";
+        pnlSearchCondition.Padding = new Padding(10);
+        pnlSearchCondition.Size = new Size(800, 200);
+        pnlSearchCondition.TabIndex = 1;
+        // 
+        // tlpCondition
+        // 
+        tlpCondition.ColumnCount = 5;
+        tlpCondition.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+        tlpCondition.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
+        tlpCondition.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
+        tlpCondition.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
+        tlpCondition.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tlpCondition.Controls.Add(lblCollectDate, 0, 0);
+        tlpCondition.Controls.Add(dtpCollectDateFrom, 1, 0);
+        tlpCondition.Controls.Add(lblCollectDateTo, 2, 0);
+        tlpCondition.Controls.Add(dtpCollectDateTo, 3, 0);
+        tlpCondition.Controls.Add(lblAccountDate, 0, 1);
+        tlpCondition.Controls.Add(dtpAccountDateFrom, 1, 1);
+        tlpCondition.Controls.Add(lblAccountDateTo, 2, 1);
+        tlpCondition.Controls.Add(dtpAccountDateTo, 3, 1);
+        tlpCondition.Controls.Add(lblCarNo, 0, 2);
+        tlpCondition.Controls.Add(txtCarNo, 1, 2);
+        tlpCondition.Controls.Add(lblSupplierCode, 2, 2);
+        tlpCondition.Controls.Add(txtSupplierCode, 3, 2);
+        tlpCondition.Controls.Add(pnlButtons1, 4, 3);
+        tlpCondition.Dock = DockStyle.Fill;
+        tlpCondition.Location = new Point(10, 10);
+        tlpCondition.Name = "tlpCondition";
+        tlpCondition.RowCount = 4;
+        tlpCondition.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpCondition.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpCondition.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpCondition.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpCondition.Size = new Size(780, 180);
+        tlpCondition.TabIndex = 0;
+        // 
+        // lblCollectDate
+        // 
+        lblCollectDate.Dock = DockStyle.Fill;
+        lblCollectDate.Font = new Font("メイリオ", 10F);
+        lblCollectDate.Location = new Point(3, 0);
+        lblCollectDate.Name = "lblCollectDate";
+        lblCollectDate.Size = new Size(74, 40);
+        lblCollectDate.TabIndex = 0;
+        lblCollectDate.Text = "集計日";
+        lblCollectDate.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // dtpCollectDateFrom
+        // 
+        dtpCollectDateFrom.Dock = DockStyle.Fill;
+        dtpCollectDateFrom.Format = DateTimePickerFormat.Short;
+        dtpCollectDateFrom.Location = new Point(83, 8);
+        dtpCollectDateFrom.Margin = new Padding(3, 8, 3, 3);
+        dtpCollectDateFrom.Name = "dtpCollectDateFrom";
+        dtpCollectDateFrom.Size = new Size(124, 23);
+        dtpCollectDateFrom.TabIndex = 1;
+        // 
+        // lblCollectDateTo
+        // 
+        lblCollectDateTo.Dock = DockStyle.Fill;
+        lblCollectDateTo.Font = new Font("メイリオ", 10F);
+        lblCollectDateTo.Location = new Point(213, 0);
+        lblCollectDateTo.Name = "lblCollectDateTo";
+        lblCollectDateTo.Size = new Size(34, 40);
+        lblCollectDateTo.TabIndex = 2;
+        lblCollectDateTo.Text = "～";
+        lblCollectDateTo.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // dtpCollectDateTo
+        // 
+        dtpCollectDateTo.Dock = DockStyle.Fill;
+        dtpCollectDateTo.Format = DateTimePickerFormat.Short;
+        dtpCollectDateTo.Location = new Point(253, 8);
+        dtpCollectDateTo.Margin = new Padding(3, 8, 3, 3);
+        dtpCollectDateTo.Name = "dtpCollectDateTo";
+        dtpCollectDateTo.Size = new Size(124, 23);
+        dtpCollectDateTo.TabIndex = 3;
+        // 
+        // lblAccountDate
+        // 
+        lblAccountDate.Dock = DockStyle.Fill;
+        lblAccountDate.Font = new Font("メイリオ", 10F);
+        lblAccountDate.Location = new Point(3, 40);
+        lblAccountDate.Name = "lblAccountDate";
+        lblAccountDate.Size = new Size(74, 40);
+        lblAccountDate.TabIndex = 4;
+        lblAccountDate.Text = "計上日";
+        lblAccountDate.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // dtpAccountDateFrom
+        // 
+        dtpAccountDateFrom.Dock = DockStyle.Fill;
+        dtpAccountDateFrom.Format = DateTimePickerFormat.Short;
+        dtpAccountDateFrom.Location = new Point(83, 48);
+        dtpAccountDateFrom.Margin = new Padding(3, 8, 3, 3);
+        dtpAccountDateFrom.Name = "dtpAccountDateFrom";
+        dtpAccountDateFrom.Size = new Size(124, 23);
+        dtpAccountDateFrom.TabIndex = 5;
+        // 
+        // lblAccountDateTo
+        // 
+        lblAccountDateTo.Dock = DockStyle.Fill;
+        lblAccountDateTo.Font = new Font("メイリオ", 10F);
+        lblAccountDateTo.Location = new Point(213, 40);
+        lblAccountDateTo.Name = "lblAccountDateTo";
+        lblAccountDateTo.Size = new Size(34, 40);
+        lblAccountDateTo.TabIndex = 6;
+        lblAccountDateTo.Text = "～";
+        lblAccountDateTo.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // dtpAccountDateTo
+        // 
+        dtpAccountDateTo.Dock = DockStyle.Fill;
+        dtpAccountDateTo.Format = DateTimePickerFormat.Short;
+        dtpAccountDateTo.Location = new Point(253, 48);
+        dtpAccountDateTo.Margin = new Padding(3, 8, 3, 3);
+        dtpAccountDateTo.Name = "dtpAccountDateTo";
+        dtpAccountDateTo.Size = new Size(124, 23);
+        dtpAccountDateTo.TabIndex = 7;
+        // 
+        // lblCarNo
+        // 
+        lblCarNo.Dock = DockStyle.Fill;
+        lblCarNo.Font = new Font("メイリオ", 10F);
+        lblCarNo.Location = new Point(3, 80);
+        lblCarNo.Name = "lblCarNo";
+        lblCarNo.Size = new Size(74, 40);
+        lblCarNo.TabIndex = 8;
+        lblCarNo.Text = "車番";
+        lblCarNo.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // txtCarNo
+        // 
+        txtCarNo.Dock = DockStyle.Fill;
+        txtCarNo.Font = new Font("メイリオ", 10F);
+        txtCarNo.Location = new Point(83, 88);
+        txtCarNo.Margin = new Padding(3, 8, 3, 3);
+        txtCarNo.Name = "txtCarNo";
+        txtCarNo.Size = new Size(124, 27);
+        txtCarNo.TabIndex = 9;
+        // 
+        // lblSupplierCode
+        // 
+        lblSupplierCode.Dock = DockStyle.Fill;
+        lblSupplierCode.Font = new Font("メイリオ", 10F);
+        lblSupplierCode.Location = new Point(213, 80);
+        lblSupplierCode.Name = "lblSupplierCode";
+        lblSupplierCode.Size = new Size(34, 40);
+        lblSupplierCode.TabIndex = 10;
+        lblSupplierCode.Text = "取引先";
+        lblSupplierCode.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // txtSupplierCode
+        // 
+        txtSupplierCode.Dock = DockStyle.Fill;
+        txtSupplierCode.Font = new Font("メイリオ", 10F);
+        txtSupplierCode.Location = new Point(253, 88);
+        txtSupplierCode.Margin = new Padding(3, 8, 3, 3);
+        txtSupplierCode.Name = "txtSupplierCode";
+        txtSupplierCode.Size = new Size(124, 27);
+        txtSupplierCode.TabIndex = 11;
+        // 
+        // pnlButtons1
+        // 
+        pnlButtons1.Controls.Add(btnClear);
+        pnlButtons1.Controls.Add(btnSearch);
+        pnlButtons1.Dock = DockStyle.Fill;
+        pnlButtons1.Location = new Point(383, 123);
+        pnlButtons1.Name = "pnlButtons1";
+        pnlButtons1.Size = new Size(394, 54);
+        pnlButtons1.TabIndex = 12;
+        // 
+        // btnClear
+        // 
+        btnClear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnClear.BackColor = Color.FromArgb(100, 100, 100);
+        btnClear.FlatAppearance.BorderSize = 0;
+        btnClear.FlatStyle = FlatStyle.Flat;
+        btnClear.Font = new Font("メイリオ", 12F, FontStyle.Bold);
+        btnClear.ForeColor = Color.White;
+        btnClear.Location = new Point(262, 7);
+        btnClear.Name = "btnClear";
+        btnClear.Size = new Size(120, 40);
+        btnClear.TabIndex = 1;
+        btnClear.Text = "クリア";
+        btnClear.UseVisualStyleBackColor = false;
+        btnClear.Click += btnClear_Click;
+        // 
+        // btnSearch
+        // 
+        btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnSearch.BackColor = Color.FromArgb(0, 122, 204);
+        btnSearch.FlatAppearance.BorderSize = 0;
+        btnSearch.FlatStyle = FlatStyle.Flat;
+        btnSearch.Font = new Font("メイリオ", 12F, FontStyle.Bold);
+        btnSearch.ForeColor = Color.White;
+        btnSearch.Location = new Point(136, 7);
+        btnSearch.Name = "btnSearch";
+        btnSearch.Size = new Size(120, 40);
+        btnSearch.TabIndex = 0;
+        btnSearch.Text = "検索";
+        btnSearch.UseVisualStyleBackColor = false;
+        btnSearch.Click += btnSearch_Click;
+        // 
+        // dgvResults
+        // 
+        dgvResults.AllowUserToAddRows = false;
+        dgvResults.AllowUserToDeleteRows = false;
+        dgvResults.BackgroundColor = Color.White;
+        dgvResults.BorderStyle = BorderStyle.None;
+        dgvResults.ColumnHeadersHeight = 36;
+        dgvResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        colSupplierName = new DataGridViewTextBoxColumn();
+        dgvResults.Columns.AddRange(new DataGridViewColumn[] { colCollectDate, colAccountDate, colSupplierCode, colSupplierName, colCarNo, colScaleNo });
+        dgvResults.Dock = DockStyle.Fill;
+        dgvResults.Location = new Point(0, 240);
+        dgvResults.MultiSelect = false;
+        dgvResults.Name = "dgvResults";
+        dgvResults.ReadOnly = true;
+        dgvResults.RowHeadersVisible = false;
+        dgvResults.RowTemplate.Height = 40;
+        dgvResults.ScrollBars = ScrollBars.Vertical;
+        dgvResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        dgvResults.Size = new Size(800, 430);
+        dgvResults.TabIndex = 2;
+        dgvResults.CellDoubleClick += dgvResults_CellDoubleClick;
+        // 
+        // colCollectDate
+        // 
+        dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colCollectDate.DefaultCellStyle = dataGridViewCellStyle1;
+        colCollectDate.HeaderText = "集計日";
+        colCollectDate.Name = "colCollectDate";
+        colCollectDate.ReadOnly = true;
+        colCollectDate.Width = 110;
+        // 
+        // colAccountDate
+        // 
+        dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colAccountDate.DefaultCellStyle = dataGridViewCellStyle2;
+        colAccountDate.HeaderText = "計上日";
+        colAccountDate.Name = "colAccountDate";
+        colAccountDate.ReadOnly = true;
+        colAccountDate.Width = 110;
+        // 
+        // colSupplierCode
+        // 
+        dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colSupplierCode.DefaultCellStyle = dataGridViewCellStyle3;
+        colSupplierCode.HeaderText = "取引先コード";
+        colSupplierCode.Name = "colSupplierCode";
+        colSupplierCode.ReadOnly = true;
+        colSupplierCode.Width = 120;
+        // 
+        // colCarNo
+        // 
+        dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colCarNo.DefaultCellStyle = dataGridViewCellStyle4;
+        colCarNo.HeaderText = "車番";
+        colCarNo.Name = "colCarNo";
+        colCarNo.ReadOnly = true;
+        // 
+        // colScaleNo
+        // 
+        dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colScaleNo.DefaultCellStyle = dataGridViewCellStyle5;
+        colScaleNo.HeaderText = "スケール№";
+        colScaleNo.Name = "colScaleNo";
+        colScaleNo.ReadOnly = true;
+        colScaleNo.Width = 80;
+        // 
+        // pnlButtons2
+        // 
+        pnlButtons2.BackColor = Color.FromArgb(245, 245, 245);
+        pnlButtons2.Controls.Add(btnCancel);
+        pnlButtons2.Controls.Add(btnOk);
+        pnlButtons2.Dock = DockStyle.Bottom;
+        pnlButtons2.Location = new Point(0, 670);
+        pnlButtons2.Name = "pnlButtons2";
+        pnlButtons2.Size = new Size(800, 80);
+        pnlButtons2.TabIndex = 3;
+        // 
+        // btnCancel
+        // 
+        btnCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnCancel.BackColor = Color.FromArgb(100, 100, 100);
+        btnCancel.DialogResult = DialogResult.Cancel;
+        btnCancel.FlatAppearance.BorderSize = 0;
+        btnCancel.FlatStyle = FlatStyle.Flat;
+        btnCancel.Font = new Font("メイリオ", 12F, FontStyle.Bold);
+        btnCancel.ForeColor = Color.White;
+        btnCancel.Location = new Point(632, 15);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new Size(150, 50);
+        btnCancel.TabIndex = 1;
+        btnCancel.Text = "キャンセル";
+        btnCancel.UseVisualStyleBackColor = false;
+        btnCancel.Click += btnCancel_Click;
+        // 
+        // btnOk
+        // 
+        btnOk.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnOk.BackColor = Color.FromArgb(0, 122, 204);
+        btnOk.FlatAppearance.BorderSize = 0;
+        btnOk.FlatStyle = FlatStyle.Flat;
+        btnOk.Font = new Font("メイリオ", 12F, FontStyle.Bold);
+        btnOk.ForeColor = Color.White;
+        btnOk.Location = new Point(476, 15);
+        btnOk.Name = "btnOk";
+        btnOk.Size = new Size(150, 50);
+        btnOk.TabIndex = 0;
+        btnOk.Text = "選択";
+        btnOk.UseVisualStyleBackColor = false;
+        btnOk.Click += btnOk_Click;
+        // 
+        // TempRegistrationSearchDialog
+        // 
+        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleMode = AutoScaleMode.Font;
+        CancelButton = btnCancel;
+        ClientSize = new Size(800, 750);
+        Controls.Add(dgvResults);
+        Controls.Add(pnlButtons2);
+        Controls.Add(pnlSearchCondition);
+        Controls.Add(lblTitle);
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        MaximizeBox = false;
+        MinimizeBox = false;
+        Name = "TempRegistrationSearchDialog";
+        StartPosition = FormStartPosition.CenterParent;
+        Text = "仮登録検索";
+        pnlSearchCondition.ResumeLayout(false);
+        tlpCondition.ResumeLayout(false);
+        tlpCondition.PerformLayout();
+        pnlButtons1.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)dgvResults).EndInit();
+        pnlButtons2.ResumeLayout(false);
+        ResumeLayout(false);
+    }
+
+    private Label lblTitle;
+    private Panel pnlSearchCondition;
+    private TableLayoutPanel tlpCondition;
+    private Label lblCollectDate;
+    private DateTimePicker dtpCollectDateFrom;
+    private Label lblCollectDateTo;
+    private DateTimePicker dtpCollectDateTo;
+    private Label lblAccountDate;
+    private DateTimePicker dtpAccountDateFrom;
+    private Label lblAccountDateTo;
+    private DateTimePicker dtpAccountDateTo;
+    private Label lblCarNo;
+    private TextBox txtCarNo;
+    private Label lblSupplierCode;
+    private TextBox txtSupplierCode;
+    private Panel pnlButtons1;
+    private Button btnClear;
+    private Button btnSearch;
+    private DataGridView dgvResults;
+    private DataGridViewTextBoxColumn colCollectDate;
+    private DataGridViewTextBoxColumn colAccountDate;
+    private DataGridViewTextBoxColumn colSupplierCode;
+    private DataGridViewTextBoxColumn colCarNo;
+    private DataGridViewTextBoxColumn colScaleNo;
+    private Panel pnlButtons2;
+    private Button btnCancel;
+    private Button btnOk;
+}

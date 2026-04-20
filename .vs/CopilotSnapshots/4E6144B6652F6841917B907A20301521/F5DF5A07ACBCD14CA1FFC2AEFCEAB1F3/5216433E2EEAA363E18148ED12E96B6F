@@ -1,0 +1,117 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+
+namespace ScaleLink.Dialogs;
+
+/// <summary>取引先選択ダイアログ</summary>
+public class SupplierSelectDialog : Form
+{
+    private ListBox _lstSuppliers = null!;
+    private Button _btnOk = null!;
+    private Button _btnCancel = null!;
+
+    public SupplierModel? SelectedSupplier { get; private set; }
+
+    public SupplierSelectDialog()
+    {
+        InitializeComponent();
+        LoadSuppliers();
+    }
+
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+
+        Text            = "取引先選択";
+        Width           = 400;
+        Height          = 500;
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        StartPosition   = FormStartPosition.CenterParent;
+        MaximizeBox     = false;
+        MinimizeBox     = false;
+
+        var lblTitle = new Label
+        {
+            Text      = "取引先を選択してください",
+            Dock      = DockStyle.Top,
+            Height    = 36,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Font      = new Font("メイリオ", 11f),
+        };
+
+        _lstSuppliers = new ListBox
+        {
+            Dock         = DockStyle.Fill,
+            Font         = new Font("メイリオ", 12f),
+            ItemHeight   = 36,
+            IntegralHeight = false,
+        };
+        _lstSuppliers.DoubleClick += (_, _) => AcceptSelection();
+
+        var pnlBtn = new Panel { Dock = DockStyle.Bottom, Height = 60 };
+
+        _btnOk = new Button
+        {
+            Text      = "OK",
+            Width     = 140,
+            Height    = 50,
+            Left      = 60,
+            Top       = 5,
+            Font      = new Font("メイリオ", 12f),
+            BackColor = Color.FromArgb(0, 122, 204),
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat,
+        };
+        _btnOk.FlatAppearance.BorderSize = 0;
+        _btnOk.Click += (_, _) => AcceptSelection();
+
+        _btnCancel = new Button
+        {
+            Text      = "キャンセル",
+            Width     = 140,
+            Height    = 50,
+            Left      = 210,
+            Top       = 5,
+            Font      = new Font("メイリオ", 12f),
+            BackColor = Color.Gray,
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat,
+        };
+        _btnCancel.FlatAppearance.BorderSize = 0;
+        _btnCancel.Click += (_, _) => { DialogResult = DialogResult.Cancel; Close(); };
+
+        pnlBtn.Controls.AddRange([_btnOk, _btnCancel]);
+
+        Controls.Add(_lstSuppliers);
+        Controls.Add(pnlBtn);
+        Controls.Add(lblTitle);
+
+        ResumeLayout(false);
+    }
+
+    private void LoadSuppliers()
+    {
+        foreach (var s in MasterDataService.Instance.Suppliers)
+            _lstSuppliers.Items.Add(new SupplierListItem(s));
+    }
+
+    private void AcceptSelection()
+    {
+        if (_lstSuppliers.SelectedItem is SupplierListItem item)
+        {
+            SelectedSupplier = item.Supplier;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        else
+        {
+            MessageBox.Show("取引先を選択してください。", "確認",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private record SupplierListItem(SupplierModel Supplier)
+    {
+        public override string ToString() => $"{Supplier.Code}  {Supplier.Name}";
+    }
+}

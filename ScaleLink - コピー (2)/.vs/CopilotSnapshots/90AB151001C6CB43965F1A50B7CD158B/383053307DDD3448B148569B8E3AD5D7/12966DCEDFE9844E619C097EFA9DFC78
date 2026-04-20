@@ -1,0 +1,152 @@
+﻿using ScaleLink.Models;
+using ScaleLink.Services;
+
+namespace ScaleLink.Dialogs;
+
+/// <summary>取引先選択ダイアログ</summary>
+public partial class SupplierSelectDialog : Form
+{
+    public SupplierModel? SelectedSupplier { get; private set; }
+
+    private string _sortColumn = nameof(SupplierModel.Code);
+    private bool _sortAscending = true;
+
+    public SupplierSelectDialog()
+    {
+        InitializeComponent();
+        LoadSuppliers();
+    }
+
+    private void LoadSuppliers()
+    {
+        BindSuppliers();
+    }
+
+    private void BindSuppliers()
+    {
+        var suppliers = MasterDataService.Instance.Suppliers.AsEnumerable();
+
+        var nameFilter = txtNameFilter.Text.Trim();
+        var carNoFilter = txtCarNoFilter.Text.Trim();
+
+        if (!string.IsNullOrEmpty(nameFilter))
+            suppliers = suppliers.Where(x => !string.IsNullOrEmpty(x.Name)
+                && x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+
+        if (!string.IsNullOrEmpty(carNoFilter))
+            suppliers = suppliers.Where(x => !string.IsNullOrEmpty(x.CarNo)
+                && x.CarNo.Contains(carNoFilter, StringComparison.CurrentCultureIgnoreCase));
+
+        suppliers = _sortColumn switch
+        {
+            nameof(SupplierModel.Name)  => _sortAscending ? suppliers.OrderBy(x => x.Name)  : suppliers.OrderByDescending(x => x.Name),
+            nameof(SupplierModel.CarNo) => _sortAscending ? suppliers.OrderBy(x => x.CarNo) : suppliers.OrderByDescending(x => x.CarNo),
+            _                           => _sortAscending ? suppliers.OrderBy(x => x.Code)  : suppliers.OrderByDescending(x => x.Code),
+        };
+
+        dgvSuppliers.Rows.Clear();
+        foreach (var s in suppliers)
+        {
+            var index = dgvSuppliers.Rows.Add(s.Code, s.Name, s.CarNo);
+            dgvSuppliers.Rows[index].Tag = s;
+        }
+    }
+
+    private void UpdateFilterControlLayout()
+    {
+        PositionFilterTextBox(txtNameFilter, colName.Index);
+        PositionFilterTextBox(txtCarNoFilter, colCarNo.Index);
+    }
+
+    private void PositionFilterTextBox(TextBox textBox, int columnIndex)
+    {
+        var rect = dgvSuppliers.GetCellDisplayRectangle(columnIndex, -1, true);
+        const int margin = 2;
+
+        textBox.Top = (pnlFilters.Height - textBox.Height) / 2;
+        textBox.Left = rect.Left + margin;
+        textBox.Width = Math.Max(40, rect.Width - margin * 2);
+        textBox.Visible = rect.Width > 0;
+    }
+
+    private void txtNameFilter_TextChanged(object sender, EventArgs e)
+    {
+        BindSuppliers();
+    }
+
+    private void txtCarNoFilter_TextChanged(object sender, EventArgs e)
+    {
+        BindSuppliers();
+    }
+
+    private void dgvSuppliers_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+    {
+        UpdateFilterControlLayout();
+    }
+
+    private void dgvSuppliers_Scroll(object sender, ScrollEventArgs e)
+    {
+        UpdateFilterControlLayout();
+    }
+
+    private void SupplierSelectDialog_Shown(object sender, EventArgs e)
+    {
+        UpdateFilterControlLayout();
+    }
+
+    private void SupplierSelectDialog_Resize(object sender, EventArgs e)
+    {
+        UpdateFilterControlLayout();
+    }
+
+    private void btnOk_Click(object sender, EventArgs e) => AcceptSelection();
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.Cancel;
+        Close();
+    }
+
+    private void dgvSuppliers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex >= 0)
+            AcceptSelection();
+    }
+
+    private void dgvSuppliers_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    {
+        var colName = dgvSuppliers.Columns[e.ColumnIndex].Name;
+        var mapped = colName switch
+        {
+            "colName"  => nameof(SupplierModel.Name),
+            "colCarNo" => nameof(SupplierModel.CarNo),
+            _           => nameof(SupplierModel.Code),
+        };
+
+        if (_sortColumn == mapped)
+            _sortAscending = !_sortAscending;
+        else
+        {
+            _sortColumn = mapped;
+            _sortAscending = true;
+        }
+
+        BindSuppliers();
+        UpdateFilterControlLayout();
+    }
+
+    private void AcceptSelection()
+    {
+        if (dgvSuppliers.CurrentRow?.Tag is SupplierModel supplier)
+        {
+            SelectedSupplier = supplier;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        else
+        {
+            MessageBox.Show("取引先を選択してください。", "確認",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+}

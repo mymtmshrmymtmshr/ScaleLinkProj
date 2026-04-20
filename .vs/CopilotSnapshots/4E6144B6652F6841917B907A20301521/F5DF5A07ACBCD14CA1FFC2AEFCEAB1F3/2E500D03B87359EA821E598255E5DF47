@@ -1,0 +1,122 @@
+﻿namespace ScaleLink.Dialogs;
+
+/// <summary>テンキーパッドダイアログ</summary>
+public class NumPadForm : Form
+{
+    private TextBox _txtDisplay = null!;
+    public string InputValue => _txtDisplay.Text;
+
+    public NumPadForm(string initialValue = "")
+    {
+        InitializeComponent();
+        _txtDisplay.Text = initialValue;
+    }
+
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+
+        Text            = "重量入力";
+        Width           = 320;
+        Height          = 480;
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        StartPosition   = FormStartPosition.CenterParent;
+        MaximizeBox     = false;
+        MinimizeBox     = false;
+        BackColor       = Color.FromArgb(50, 50, 55);
+
+        _txtDisplay = new TextBox
+        {
+            Dock      = DockStyle.Top,
+            Height    = 60,
+            Font      = new Font("メイリオ", 24f, FontStyle.Bold),
+            TextAlign = HorizontalAlignment.Right,
+            ReadOnly  = true,
+            BackColor = Color.White,
+        };
+
+        var pnlKeys = new TableLayoutPanel
+        {
+            Dock        = DockStyle.Fill,
+            ColumnCount = 3,
+            RowCount    = 5,
+            Padding     = new Padding(4),
+        };
+        for (int i = 0; i < 3; i++)
+            pnlKeys.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3f));
+        for (int i = 0; i < 5; i++)
+            pnlKeys.RowStyles.Add(new RowStyle(SizeType.Percent, 20f));
+
+        string[,] keys =
+        {
+            { "7", "8", "9" },
+            { "4", "5", "6" },
+            { "1", "2", "3" },
+            { ".", "0", "⌫" },
+            { "C", "OK", "" },
+        };
+
+        for (int r = 0; r < 5; r++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                var key = keys[r, c];
+                if (string.IsNullOrEmpty(key)) continue;
+
+                var btn = new Button
+                {
+                    Text      = key,
+                    Dock      = DockStyle.Fill,
+                    Font      = new Font("メイリオ", 18f, FontStyle.Bold),
+                    FlatStyle = FlatStyle.Flat,
+                    ForeColor = Color.White,
+                    BackColor = key == "OK"  ? Color.FromArgb(0, 122, 204)
+                              : key == "C"   ? Color.FromArgb(160, 30, 30)
+                              : key == "⌫"  ? Color.FromArgb(100, 80, 0)
+                              : Color.FromArgb(70, 70, 80),
+                    Margin    = new Padding(3),
+                };
+                btn.FlatAppearance.BorderSize = 0;
+                btn.Click += OnKeyClicked;
+                pnlKeys.Controls.Add(btn, c, r);
+            }
+        }
+
+        Controls.Add(pnlKeys);
+        Controls.Add(_txtDisplay);
+        ResumeLayout(false);
+    }
+
+    private void OnKeyClicked(object? sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+        switch (btn.Text)
+        {
+            case "OK":
+                if (decimal.TryParse(_txtDisplay.Text, out _))
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("有効な数値を入力してください。");
+                }
+                break;
+            case "C":
+                _txtDisplay.Text = "";
+                break;
+            case "⌫":
+                if (_txtDisplay.Text.Length > 0)
+                    _txtDisplay.Text = _txtDisplay.Text[..^1];
+                break;
+            case ".":
+                if (!_txtDisplay.Text.Contains('.'))
+                    _txtDisplay.Text += ".";
+                break;
+            default:
+                _txtDisplay.Text += btn.Text;
+                break;
+        }
+    }
+}

@@ -1,0 +1,87 @@
+﻿using System.Drawing.Printing;
+
+namespace ScaleLink.Forms;
+
+/// <summary>仕切書プレビューダイアログ</summary>
+public partial class ShippingDocumentPreviewDialog : Form
+{
+    public ShippingDocumentPreviewDialog()
+    {
+        InitializeComponent();
+    }
+
+    private void btnPrint_Click(object sender, EventArgs e)
+    {
+        if (picPreview.Image == null)
+        {
+            MessageBox.Show("印刷する画像がありません。", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try
+        {
+            using var printDocument = new PrintDocument();
+            printDocument.PrintPage += PrintDocument_PrintPage;
+
+            using var printDialog = new PrintDialog
+            {
+                Document = printDocument
+            };
+
+            if (printDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                printDocument.Print();
+                MessageBox.Show("印刷を開始しました。", "印刷",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"印刷エラー:\n{ex.Message}", "エラー",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
+    {
+        if (picPreview.Image == null || e.Graphics == null)
+            return;
+
+        // 用紙サイズに合わせて画像を配置
+        var pageRect = e.PageBounds;
+        var imageRect = GetScaledImageRectangle(picPreview.Image.Size, pageRect.Size);
+
+        // 画像を中央に配置して印刷
+        var x = (pageRect.Width - imageRect.Width) / 2;
+        var y = (pageRect.Height - imageRect.Height) / 2;
+
+        e.Graphics.DrawImage(picPreview.Image, x, y, imageRect.Width, imageRect.Height);
+    }
+
+    private Rectangle GetScaledImageRectangle(Size imageSize, Size pageSize)
+    {
+        // アスペクト比を維持しながら用紙サイズに収まるようにスケーリング
+        float imageAspect = (float)imageSize.Width / imageSize.Height;
+        float pageAspect = (float)pageSize.Width / pageSize.Height;
+
+        int width, height;
+
+        if (imageAspect > pageAspect)
+        {
+            // 画像が横長の場合
+            width = pageSize.Width;
+            height = (int)(pageSize.Width / imageAspect);
+        }
+        else
+        {
+            // 画像が縦長の場合
+            height = pageSize.Height;
+            width = (int)(pageSize.Height * imageAspect);
+        }
+
+        return new Rectangle(0, 0, width, height);
+    }
+}

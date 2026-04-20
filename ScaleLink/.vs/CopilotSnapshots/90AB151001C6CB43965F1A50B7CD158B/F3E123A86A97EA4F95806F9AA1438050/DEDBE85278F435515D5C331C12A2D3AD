@@ -1,0 +1,174 @@
+﻿using ScaleLink.Models;
+
+namespace ScaleLink.Forms;
+
+/// <summary>仕入業者選択パネル</summary>
+public partial class SupplierSelectorForm : Form
+{
+    private readonly MainForm _mainForm;
+    private readonly Dictionary<string, WorkspaceForm> _workspaces = [];
+    private readonly Dictionary<string, Button> _buttons = [];
+    private string _selectedSupplierCode = string.Empty;
+
+    public SupplierSelectorForm(MainForm mainForm)
+    {
+        _mainForm = mainForm;
+        InitializeComponent();
+    }
+
+    // ─── 業者追加ボタン ────────────────────────────────────
+    private void btnAdd_Click(object sender, EventArgs e)
+    {
+        using var dlg = new Dialogs.SupplierSelectDialog();
+        if (dlg.ShowDialog(this) != DialogResult.OK) return;
+        if (dlg.SelectedSupplier is null) return;
+        var supplier = dlg.SelectedSupplier;
+        if (_workspaces.ContainsKey(supplier.Code)) { SwitchTo(supplier.Code); return; }
+        AddSupplier(supplier);
+    }
+
+    // ─── 終了ボタン ────────────────────────────────────────
+    private void btnExit_Click(object sender, EventArgs e) => _mainForm.RequestClose();
+
+    // ─── 業者ボタン追加 ───────────────────────────────────
+    public void AddSupplier(SupplierModel supplier)
+    {
+        var ws = _mainForm.AddWorkspace(supplier);
+        _workspaces[supplier.Code] = ws;
+        var btn = CreateSupplierButton(supplier);
+        _buttons[supplier.Code] = btn;
+        AttachLongPress(btn, supplier.Code);
+        pnlList.Controls.Add(btn);
+        lblEmpty.Visible = false;
+        SwitchTo(supplier.Code);
+        RefreshListLayout();
+    }
+
+    // ─── 業者削除（登録完了後） ───────────────────────────
+    public void RemoveSupplier(string supplierCode)
+    {
+        if (_buttons.TryGetValue(supplierCode, out var btn))
+        {
+            pnlList.Controls.Remove(btn);
+            btn.Dispose();
+            _buttons.Remove(supplierCode);
+        }
+        if (_workspaces.TryGetValue(supplierCode, out var ws))
+        {
+            ws.Close();
+            _workspaces.Remove(supplierCode);
+        }
+        _selectedSupplierCode = string.Empty;
+        if (_workspaces.Count > 0)
+            SwitchTo(_workspaces.Keys.First());
+        else
+            lblEmpty.Visible = true;
+    }
+
+    // ─── 業者切替 ──────────────────────────────────────────
+    public void SwitchTo(string supplierCode)
+    {
+        if (_selectedSupplierCode == supplierCode) return;
+        if (_buttons.TryGetValue(_selectedSupplierCode, out var prev))
+            UpdateButtonState(prev, SupplierButtonState.Waiting);
+        _selectedSupplierCode = supplierCode;
+        if (_buttons.TryGetValue(supplierCode, out var cur))
+            UpdateButtonState(cur, SupplierButtonState.Selected);
+        if (_workspaces.TryGetValue(supplierCode, out var ws))
+            ws.Activate();
+    }
+
+    // ─── 状態更新 ──────────────────────────────────────────
+    public void UpdateSupplierState(string supplierCode, SupplierButtonState state)
+    {
+        if (supplierCode == _selectedSupplierCode) return;
+        if (_buttons.TryGetValue(supplierCode, out var btn))
+            UpdateButtonState(btn, state);
+    }
+
+    private static void UpdateButtonState(Button btn, SupplierButtonState state)
+    {
+        (btn.BackColor, var stateText) = state switch
+        {
+            SupplierButtonState.Weighing  => (Color.SteelBlue,  "計量中"),
+            SupplierButtonState.Inputting => (Color.RoyalBlue,  "入力中"),
+            SupplierButtonState.Selected  => (Color.DodgerBlue, "選択中"),
+            _                             => (Color.Gray,       "待機中"),
+        };
+        var lines = btn.Text.Split('\n');
+        btn.Text = lines.Length >= 1 ? $"{lines[0]}\n{stateText}" : btn.Text;
+    }
+
+    // ─── 業者ボタン生成 ───────────────────────────────────
+    private Button CreateSupplierButton(SupplierModel supplier)
+    {
+        var shortName = supplier.Name.Length > 4 ? supplier.Name[..4] : supplier.Name;
+        var btn = new Button
+        {
+            Text      = $"{shortName}\n待機中",
+            Width     = 80,
+            Height    = 80,
+            Font      = new Font("メイリオ", 9f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            ForeColor = Color.White,
+            BackColor = Color.Gray,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Tag       = supplier.Code,
+            Margin    = new Padding(3),
+        };
+        btn.FlatAppearance.BorderSize = 0;
+        btn.Click += (_, _) => SwitchTo(supplier.Code);
+        return btn;
+    }
+
+    // ─── 長押し削除 ───────────────────────────────────────
+    private void AttachLongPress(Button btn, string supplierCode)
+    {
+        System.Windows.Forms.Timer? pressTimer = null;
+        btn.MouseDown += (_, _) =>
+        {
+            pressTimer = new System.Windows.Forms.Timer { Interval = 1500 };
+            pressTimer.Tick += (_, _) =>
+            {
+                pressTimer.Stop(); pressTimer.Dispose(); pressTimer = null;
+                ConfirmAndRemove(supplierCode);
+            };
+            pressTimer.Start();
+        };
+        btn.MouseUp += (_, _) => { pressTimer?.Stop(); pressTimer?.Dispose(); pressTimer = null; };
+    }
+
+    private void ConfirmAndRemove(string supplierCode)
+    {
+        if (!_workspaces.TryGetValue(supplierCode, out var ws)) return;
+        var message = ws.HasUnsavedData
+            ? "入力中のデータが失われます。削除しますか？"
+            : "この業者を削除しますか？";
+        if (MessageBox.Show(message, "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            RemoveSupplier(supplierCode);
+    }
+
+    // ─── リストレイアウト更新 ─────────────────────────────
+    private void RefreshListLayout()
+    {
+        int top = 5;
+        foreach (Control c in pnlList.Controls)
+        {
+            if (c is Button btn)
+            {
+                btn.Left = 5;
+                btn.Top  = top;
+                top += btn.Height + 3;
+            }
+        }
+    }
+}
+
+/// <summary>業者ボタンの状態</summary>
+public enum SupplierButtonState
+{
+    Waiting,
+    Weighing,
+    Inputting,
+    Selected,
+}
