@@ -1,15 +1,16 @@
 using System.IO.Ports;
+using System.Threading;
 
 namespace ScaleLink.Services;
 
-/// <summary>RS-232C重量受信サービス（シングルトン）</summary>
+/// <summary>RS-232C weight reception service (Singleton)</summary>
 public class SerialPortService : IDisposable
 {
     private static SerialPortService? _instance;
     private static readonly object _lock = new();
 
     private SerialPort? _port;
-    private System.Windows.Forms.Timer? _timer;
+    private Timer? _timer;
     private decimal _lastWeight;
     private WeightStatus _status = WeightStatus.Disconnected;
 
@@ -32,7 +33,7 @@ public class SerialPortService : IDisposable
     public WeightStatus Status => _status;
     public decimal LastWeight => _lastWeight;
 
-    /// <summary>シリアルポートを開いて受信を開始する</summary>
+    /// <summary>Open serial port and start reception</summary>
     public void Start(string portName, int baudRate = 9600, int dataBits = 8,
         Parity parity = Parity.None, StopBits stopBits = StopBits.One)
     {
@@ -47,10 +48,8 @@ public class SerialPortService : IDisposable
             _port.Open();
             _status = WeightStatus.Stable;
 
-            // UIスレッドで1秒ごとにイベント発火
-            _timer = new System.Windows.Forms.Timer { Interval = 1000 };
-            _timer.Tick += OnTimer;
-            _timer.Start();
+            // Fire event every 1 second
+            _timer = new Timer(OnTimer, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
         catch
         {
@@ -79,15 +78,14 @@ public class SerialPortService : IDisposable
         }
     }
 
-    private void OnTimer(object? sender, EventArgs e)
+    private void OnTimer(object? state)
     {
         WeightReceived?.Invoke(this, new WeightReceivedEventArgs(_lastWeight, _status));
     }
 
-    /// <summary>シリアルポートをクローズする</summary>
+    /// <summary>Close serial port</summary>
     public void Stop()
     {
-        _timer?.Stop();
         _timer?.Dispose();
         if (_port?.IsOpen == true)
             _port.Close();
@@ -98,18 +96,18 @@ public class SerialPortService : IDisposable
     public void Dispose() => Stop();
 }
 
-/// <summary>重量受信イベント引数</summary>
+/// <summary>Weight reception event args</summary>
 public class WeightReceivedEventArgs(decimal weight, WeightStatus status) : EventArgs
 {
     public decimal Weight { get; } = weight;
     public WeightStatus Status { get; } = status;
 }
 
-/// <summary>重量受信ステータス</summary>
+/// <summary>Weight reception status</summary>
 public enum WeightStatus
 {
-    Stable,       // 安定
-    Unstable,     // 計量中
-    Error,        // 受信エラー
-    Disconnected, // 未接続
+    Stable,       // Stable
+    Unstable,     // Measuring
+    Error,        // Reception error
+    Disconnected, // Disconnected
 }

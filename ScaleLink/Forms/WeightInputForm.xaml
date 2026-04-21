@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="ScaleLink.Forms.WeightInputForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="345"
+             Background="#FF3C3C3C">
+    <DockPanel Margin="8" LastChildFill="True" Background="#FF3C3C3C">
+        <StackPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Margin="0,0,0,8">
+            <TextBlock Text="現在重量" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Foreground="White"/>
+            <TextBlock x:Name="lblCurrentWeight" 
+                       Text="0" 
+                       FontSize="64" 
+                       FontWeight="Bold" 
+                       Foreground="#FF3CD744"/>
+            <TextBlock x:Name="lblWeightStatus" 
+                       Text="─ 未接続" 
+                       FontSize="24" 
+                       Foreground="#FFB4B4B4"
+                       Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <StackPanel x:Name="WeightPanel" DockPanel.Dock="Top" 
+                    Orientation="Horizontal" 
+                    Margin="0,0,0,8" Height="44">
+            <TextBox x:Name="txtManualWeight" 
+                     Width="160" 
+                     Height="33" 
+                     FontSize="24" 
+                     IsEnabled="False"
+                     Background="#FF4A4A4A"
+                     Foreground="White"
+                     BorderBrush="#FF606060"
+                     BorderThickness="1"/>
+            <Button x:Name="btnNumPad" 
+                    Content="電卓" 
+                    Width="166" 
+                    Height="32" 
+                    FontSize="22"
+                    Background="#FF4A4A4A"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnNumPad_Click"/>
+        </StackPanel>
+
+        <Button DockPanel.Dock="Top" 
+                x:Name="btnConfirmWeight" 
+                Content="重量確定" 
+                Height="55" 
+                FontSize="40" 
+                FontWeight="Bold" 
+                Background="#FF0078D7"
+                Foreground="White"
+                Click="BtnConfirmWeight_Click"/>
+
+        <Grid x:Name="HinGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Expander x:Name="frequentExpander" 
+                      Grid.Row="0"
+                      Header="▼ よく使う品目" 
+                      IsExpanded="True"
+                      FontSize="18"
+                      FontWeight="Bold">
+                <ListBox x:Name="lstFrequentProducts" 
+                         FontSize="22"
+                         Background="#FF4A4A4A"
+                         Foreground="White"
+                         BorderBrush="#FF606060"
+                         SelectionChanged="LstFrequentProducts_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Height" Value="44"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FF00C8FF"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF3C3C3C"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Expander>
+
+            <Expander x:Name="otherExpander" 
+                      Grid.Row="1"
+                      Header="▶ その他の品目" 
+                      IsExpanded="False"
+                      FontSize="18"
+                      FontWeight="Bold">
+                <ListBox x:Name="lstOtherProducts" 
+                         FontSize="22"
+                         Background="#FF4A4A4A"
+                         Foreground="White"
+                         BorderBrush="#FF606060"
+                         SelectionChanged="LstOtherProducts_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Height" Value="44"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FF00C8FF"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF3C3C3C"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Expander>
+        </Grid>
+    </DockPanel>
+</UserControl>

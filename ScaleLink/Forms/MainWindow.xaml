@@ -1,0 +1,22 @@
+﻿<Window x:Class="ScaleLink.Forms.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ScaleLink - 計量票入力" 
+        Width="1264" 
+        Height="985"
+        WindowState="Maximized">
+    <Grid Background="#FF1E1E1E">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="135"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" x:Name="supplierSelectorHost" />
+
+        <TabControl Grid.Column="1" 
+                    x:Name="workspaceTabs"
+                    Background="#FF1E1E1E"
+                    BorderThickness="0">
+        </TabControl>
+    </Grid>
+</Window>

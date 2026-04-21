@@ -1,0 +1,120 @@
+﻿<Window x:Class="ScaleLink.Dialogs.TempRegistrationSearchDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="仮登録検索" 
+        Width="800"
+        Height="640"
+        WindowStartupLocation="CenterOwner"
+        Background="#FFF0F0F0">
+    <DockPanel>
+        <!-- タイトルバー -->
+        <Border DockPanel.Dock="Top" Background="#FF007ACC" Padding="0,10">
+            <TextBlock Text="仮登録検索" HorizontalAlignment="Center"
+                       FontSize="18" FontWeight="Bold" Foreground="White"/>
+        </Border>
+
+        <!-- フッター -->
+        <Border DockPanel.Dock="Bottom" Background="#FFF0F0F0" Padding="10,8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="選択" Width="130" Height="50" Margin="0,0,10,0"
+                        Click="BtnOk_Click"
+                        Background="#FF007ACC" Foreground="White"
+                        BorderThickness="0" FontSize="18" FontWeight="Bold"/>
+                <Button Content="キャンセル" Width="130" Height="50"
+                        Click="BtnCancel_Click"
+                        Background="#FF666666" Foreground="White"
+                        BorderThickness="0" FontSize="18" FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 検索条件 -->
+        <Border DockPanel.Dock="Top" Background="White" Padding="12,10" Margin="0,0,0,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="28"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 集計日 -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="集計日"
+                           VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                <DatePicker x:Name="dtpCollectDateFrom" Grid.Row="0" Grid.Column="1"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="〜"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                <DatePicker x:Name="dtpCollectDateTo" Grid.Row="0" Grid.Column="3"/>
+
+                <!-- 計上日 -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="計上日"
+                           VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                <DatePicker x:Name="dtpAccountDateFrom" Grid.Row="2" Grid.Column="1"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="〜"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                <DatePicker x:Name="dtpAccountDateTo" Grid.Row="2" Grid.Column="3"/>
+
+                <!-- 車番 / 取引先 -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="車番"
+                           VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                <TextBox x:Name="txtCarNo" Grid.Row="4" Grid.Column="1"
+                         Height="26" FontSize="14"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Text="取"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                <TextBox x:Name="txtSupplierCode" Grid.Row="4" Grid.Column="3"
+                         Height="26" FontSize="14"/>
+
+                <!-- 検索・クリアボタン -->
+                <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="5"
+                            Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="検索" Width="130" Height="44" Margin="0,0,8,0"
+                            Click="BtnSearch_Click"
+                            Background="#FF007ACC" Foreground="White"
+                            BorderThickness="0" FontSize="16" FontWeight="Bold"/>
+                    <Button Content="クリア" Width="130" Height="44"
+                            Click="BtnClear_Click"
+                            Background="#FF666666" Foreground="White"
+                            BorderThickness="0" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 一覧 -->
+        <DataGrid x:Name="dgvResults"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserResizeRows="False"
+                  SelectionMode="Single"
+                  RowHeight="36"
+                  FontSize="14"
+                  GridLinesVisibility="All"
+                  Background="White"
+                  MouseDoubleClick="DgvResults_MouseDoubleClick">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#FFD0E8F8"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="Padding" Value="6,4"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="集計日"      Binding="{Binding CollectDate,  StringFormat=yyyy/MM/dd}" Width="110" IsReadOnly="True"/>
+                <DataGridTextColumn Header="計上日"      Binding="{Binding AccountDate,  StringFormat=yyyy/MM/dd}" Width="110" IsReadOnly="True"/>
+                <DataGridTextColumn Header="取引先コード" Binding="{Binding SupplierCode}"                          Width="110" IsReadOnly="True"/>
+                <DataGridTextColumn Header="取引先名"    Binding="{Binding SupplierName}"                          Width="*"   IsReadOnly="True"/>
+                <DataGridTextColumn Header="車番"        Binding="{Binding CarNo}"                                 Width="90"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="スケールNo"  Binding="{Binding ScaleNo}"                               Width="100" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

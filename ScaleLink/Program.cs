@@ -1,11 +1,13 @@
 namespace ScaleLink;
 
+using System.Windows;
+
 static class Program
 {
     [STAThread]
     static void Main()
     {
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Forms.MainForm());
+        var app = new Application();
+        app.Run(new Forms.MainWindow());
     }
 }

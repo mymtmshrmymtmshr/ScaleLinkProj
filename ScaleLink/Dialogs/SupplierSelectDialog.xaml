@@ -1,0 +1,209 @@
+﻿<Window x:Class="ScaleLink.Dialogs.SupplierSelectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="取引先＆車番　選択" 
+        Width="560" 
+        Height="540"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF3C3C3C"
+        Foreground="White"
+        ResizeMode="CanResize">
+    <Grid Margin="0" Background="#FF3C3C3C">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- タイトル -->
+        <TextBlock Grid.Row="0" 
+                   Text="取引先を選択してください" 
+                   FontSize="17"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Margin="0,15,0,10"/>
+
+        <!-- 検索フィルタ（取引先名と車番） -->
+        <Grid Grid.Row="1" Margin="10,0,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="130"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 取引先名で検索（取引先名列と同じ幅・位置） -->
+            <TextBox Grid.Column="1" 
+                     x:Name="txtNameFilter" 
+                     Height="32"
+                     FontSize="14"
+                     VerticalContentAlignment="Center"
+                     Background="#FF4A4A4A"
+                     Foreground="White"
+                     CaretBrush="White"
+                     BorderBrush="#FF606060"
+                     BorderThickness="1"
+                     TextChanged="TxtNameFilter_TextChanged"/>
+
+            <!-- 車番フィルター（車番列と同じ幅・位置） -->
+            <TextBox Grid.Column="2" 
+                     x:Name="txtCarNoFilter" 
+                     Height="32"
+                     FontSize="14"
+                     VerticalContentAlignment="Center"
+                     Background="#FF4A4A4A"
+                     Foreground="White"
+                     CaretBrush="White"
+                     BorderBrush="#FF606060"
+                     BorderThickness="1"
+                     TextChanged="TxtCarNoFilter_TextChanged"/>
+        </Grid>
+
+        <!-- 列ヘッダー -->
+        <Border Grid.Row="2" 
+                BorderBrush="#FF00C8FF" 
+                BorderThickness="1"
+                Height="36"
+                Margin="10,0,10,0">
+            <Grid Background="#FF00C8FF">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="130"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="取引先コード" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="14"
+                           Padding="8,6"
+                           TextAlignment="Center"/>
+                <Border Grid.Column="1" 
+                        BorderBrush="White" 
+                        BorderThickness="1,0,1,0">
+                    <TextBlock Text="取引先名" 
+                               Foreground="White"
+                               FontWeight="Bold"
+                               FontSize="14"
+                               Padding="8,6"
+                               TextAlignment="Center"/>
+                </Border>
+                <TextBlock Grid.Column="2" 
+                           Text="車番" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="14"
+                           Padding="8,6"
+                           TextAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- データグリッド -->
+        <DataGrid Grid.Row="3"
+                  x:Name="dgvSuppliers"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  HeadersVisibility="None"
+                  GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="#FF505050"
+                  RowHeight="45"
+                  Margin="10,0,10,10"
+                  BorderBrush="#FF00C8FF"
+                  BorderThickness="1,0,1,1"
+                  MouseDoubleClick="DgvSuppliers_MouseDoubleClick"
+                  FontSize="14"
+                  Background="#FF3C3C3C"
+                  Foreground="White">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="#FF3C3C3C"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FF00C8FF"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FF4A4A4A"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Code}" Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Name}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding CarNo}" Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ボタン -->
+        <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    Margin="0,0,0,15">
+            <Button x:Name="btnOk" 
+                    Content="OK" 
+                    Width="140" 
+                    Height="44"
+                    FontSize="17"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
+                    Background="#FF00C8FF"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnOk_Click"/>
+            <Button x:Name="btnCancel" 
+                    Content="キャンセル" 
+                    Width="140" 
+                    Height="44"
+                    FontSize="17"
+                    FontWeight="Bold"
+                    Background="#FF4A4A4A"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
