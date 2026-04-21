@@ -126,13 +126,22 @@ public partial class WeightInputForm : UserControl
 
     private void BtnNumPad_Click(object sender, RoutedEventArgs e)
     {
-        OpenNumPadForManualWeight();
+        OpenNumPadForManualWeight(sender as Button);
     }
 
-    private void OpenNumPadForManualWeight(string? initialValue = null)
+    private void OpenNumPadForManualWeight(Button? anchor = null, string? initialValue = null)
     {
         SetManualMode(true);
         var numPad = new Dialogs.NumPadForm(initialValue ?? txtManualWeight.Text);
+
+        if (anchor != null)
+        {
+            numPad.WindowStartupLocation = WindowStartupLocation.Manual;
+            var screenPos = anchor.PointToScreen(new Point(0, anchor.ActualHeight));
+            numPad.Left = screenPos.X;
+            numPad.Top = screenPos.Y;
+        }
+
         if (numPad.ShowDialog() == true)
             txtManualWeight.Text = numPad.InputValue;
     }

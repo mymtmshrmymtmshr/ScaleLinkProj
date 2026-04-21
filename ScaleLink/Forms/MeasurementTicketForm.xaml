@@ -140,7 +140,6 @@
                   RowHeaderWidth="0"
                   GridLinesVisibility="All"
                   FontSize="17"
-                  RowHeight="40"
                   Background="White">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No" Binding="{Binding No}" IsReadOnly="True" Width="40"/>
