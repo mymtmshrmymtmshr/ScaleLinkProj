@@ -137,9 +137,39 @@ public partial class WeightInputForm : UserControl
         if (anchor != null)
         {
             numPad.WindowStartupLocation = WindowStartupLocation.Manual;
-            var screenPos = anchor.PointToScreen(new Point(0, anchor.ActualHeight));
-            numPad.Left = screenPos.X;
-            numPad.Top = screenPos.Y;
+
+            // ボタン直下の画面座標（物理ピクセル → DIP変換）
+            var source = PresentationSource.FromVisual(anchor);
+            double dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+            double dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+
+            var ptBottom = anchor.PointToScreen(new Point(0, anchor.ActualHeight));
+            var ptTop    = anchor.PointToScreen(new Point(0, 0));
+
+            double left = ptBottom.X / dpiX;
+            double top  = ptBottom.Y / dpiY;
+
+            double w = numPad.Width;
+            double h = numPad.Height;
+
+            double screenRight  = SystemParameters.WorkArea.Right;
+            double screenBottom = SystemParameters.WorkArea.Bottom;
+            double screenTop    = SystemParameters.WorkArea.Top;
+
+            // 右端補正
+            if (left + w > screenRight)
+                left = screenRight - w;
+
+            // 下端補正：はみ出す場合はボタン上に表示
+            if (top + h > screenBottom)
+                top = ptTop.Y / dpiY - h;
+
+            // 上端補正
+            if (top < screenTop)
+                top = screenTop;
+
+            numPad.Left = left;
+            numPad.Top  = top;
         }
 
         if (numPad.ShowDialog() == true)
