@@ -302,6 +302,11 @@ public partial class MeasurementTicketForm : UserControl
         fileDialog.ShowDialog();
     }
 
+    private void BtnSalesManagementLink_Click(object sender, RoutedEventArgs e)
+    {
+        MessageBox.Show("”Ì”„ŠÇ—˜AŒg‚Í–¢À‘•‚Å‚·B", "î•ñ", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     private System.Drawing.Image CreateSampleReceiptImage()
     {
         var bitmap = new System.Drawing.Bitmap(800, 1000);

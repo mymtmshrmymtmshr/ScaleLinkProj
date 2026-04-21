@@ -44,7 +44,7 @@
                     Click="BtnNumPad_Click"/>
         </StackPanel>
 
-        <Button DockPanel.Dock="Bottom" 
+        <Button DockPanel.Dock="Top" 
                 x:Name="btnConfirmWeight" 
                 Content="重量確定" 
                 Height="55" 
@@ -54,7 +54,7 @@
                 Foreground="White"
                 Click="BtnConfirmWeight_Click"/>
 
-        <Grid>
+        <Grid x:Name="HinGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>

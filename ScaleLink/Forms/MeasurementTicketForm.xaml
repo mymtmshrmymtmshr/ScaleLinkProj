@@ -1,60 +1,136 @@
 ﻿<UserControl x:Class="ScaleLink.Forms.MeasurementTicketForm"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="White">
+             Background="White"
+             FontSize="18">
     <DockPanel Margin="10" LastChildFill="True">
         <StackPanel DockPanel.Dock="Top" Margin="0,0,0,8">
-            <WrapPanel Margin="0,0,0,4">
-                <TextBlock Text="集計日" Margin="0,4,4,0"/>
-                <DatePicker x:Name="dtpCollectDate" Width="120"/>
+            <Grid Margin="0,0,0,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="165"/>
+                    <ColumnDefinition Width="185"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Text="計上日" Margin="16,4,4,0"/>
-                <DatePicker x:Name="dtpAccountDate" Width="120"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="集計日" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <DatePicker x:Name="dtpCollectDate" Grid.Row="1" Grid.Column="0" Width="130"/>
 
-                <TextBlock Text="取引先" Margin="16,4,4,0"/>
-                <TextBox x:Name="txtSupplierCode" Width="80"/>
-                <TextBlock x:Name="lblSupplierName" Margin="8,4,0,0"/>
-            </WrapPanel>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="計上日" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <DatePicker x:Name="dtpAccountDate" Grid.Row="1" Grid.Column="1" Width="130"/>
 
-            <WrapPanel>
-                <TextBlock Text="枝番" Margin="0,4,4,0"/>
-                <TextBox x:Name="txtBranchCode" Width="60"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="営業所" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                    <TextBox x:Name="txtBranchCode" Width="34" MaxLength="1"/>
+                    <Border BorderBrush="#FFC8C8C8" BorderThickness="1" Height="28" Width="155" Background="#FFF3F3F3" Margin="4,0,0,0">
+                        <TextBlock x:Name="lblBranchName" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    </Border>
+                </StackPanel>
 
-                <TextBlock Text="取引区分" Margin="10,4,4,0"/>
-                <ComboBox x:Name="cmbTransType" Width="80" SelectedIndex="0">
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="取引区分" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <ComboBox x:Name="cmbTransType" Grid.Row="1" Grid.Column="3" Width="145" SelectedIndex="0">
                     <ComboBoxItem Content="現金"/>
                     <ComboBoxItem Content="掛け"/>
                 </ComboBox>
 
-                <TextBlock Text="計量器" Margin="10,4,4,0"/>
-                <TextBox x:Name="txtScaleNo" Width="60"/>
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="スケールNo." Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBox x:Name="txtScaleNo" Grid.Row="1" Grid.Column="4" Width="165" Text="1"/>
+            </Grid>
 
-                <TextBlock Text="初期重量" Margin="10,4,4,0"/>
-                <TextBox x:Name="txtInitialMeasuredWeight" Width="90" TextChanged="TxtInitialMeasuredWeight_TextChanged"/>
-            </WrapPanel>
+            <Grid Margin="0,0,0,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="185"/>
+                    <ColumnDefinition Width="145"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="取引先" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBox x:Name="txtSupplierCode" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="取引先名" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <Border Grid.Row="1" Grid.Column="1" BorderBrush="#FFC8C8C8" BorderThickness="1" Height="28" Background="#FFF3F3F3">
+                    <TextBlock x:Name="lblSupplierName" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                </Border>
+
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="運送" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="10,0,0,0">
+                    <TextBox x:Name="txtCarrierCode" Width="62" MaxLength="4"/>
+                    <Border BorderBrush="#FFC8C8C8" BorderThickness="1" Height="28" Width="100" Background="#FFF3F3F3" Margin="4,0,0,0">
+                        <TextBlock x:Name="lblCarrierName" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    </Border>
+                </StackPanel>
+
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="車番" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBox Grid.Row="1" Grid.Column="3" Margin="5,0,5,0"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="支払区分" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <ComboBox Grid.Row="1" Grid.Column="4" Margin="5,0,5,0"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="5" Text="担当" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBox Grid.Row="1" Grid.Column="5" Margin="5,0,5,0"/>
+            </Grid>
         </StackPanel>
 
-        <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" LastChildFill="True">
-            <WrapPanel DockPanel.Dock="Left">
-                <TextBlock Text="数量:"/>
-                <TextBlock x:Name="lblTotalQuantity" Text="0"/>
-                <TextBlock Text="  本数:" Margin="12,0,0,0"/>
-                <TextBlock x:Name="lblTotalCount" Text="0"/>
-                <TextBlock Text="  金額:" Margin="12,0,0,0"/>
-                <TextBlock x:Name="lblTotalAmount" Text="0"/>
-                <TextBlock Text="  支払:" Margin="12,0,0,0"/>
-                <TextBlock x:Name="lblTotalPayment" Text="0"/>
-            </WrapPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+            <Grid Width="745" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel DockPanel.Dock="Right" 
-                        Orientation="Horizontal" 
-                        HorizontalAlignment="Right">
-                <Button Content="クリア" Width="72" Margin="4,0,0,0" Click="BtnClear_Click"/>
-                <Button Content="仕切書" Width="72" Margin="4,0,0,0" Click="BtnPrintShipping_Click"/>
-                <Button Content="検収票" Width="72" Margin="4,0,0,0" Click="BtnPrintReceipt_Click"/>
-                <Button Content="登録" Width="72" Margin="4,0,0,0" Click="BtnRegister_Click"/>
-            </StackPanel>
-        </DockPanel>
+                <Border Grid.Column="4" BorderBrush="#FF808080" BorderThickness="1" Background="White">
+                    <TextBlock x:Name="lblTotalQuantity" Text="0" HorizontalAlignment="Right" Margin="0,2,6,2"/>
+                </Border>
+                <Border Grid.Column="5" BorderBrush="#FF808080" BorderThickness="1" Background="White">
+                    <TextBlock x:Name="lblTotalCount" Text="0" HorizontalAlignment="Right" Margin="0,2,6,2"/>
+                </Border>
+                <Border Grid.Column="7" BorderBrush="#FF808080" BorderThickness="1" Background="White">
+                    <TextBlock x:Name="lblTotalAmount" Text="0" HorizontalAlignment="Right" Margin="0,2,6,2"/>
+                </Border>
+                <Border Grid.Column="8" BorderBrush="#FF808080" BorderThickness="1" Background="White">
+                    <TextBlock x:Name="lblTotalPayment" Text="0" HorizontalAlignment="Right" Margin="0,2,6,2"/>
+                </Border>
+            </Grid>
+
+            <Grid Margin="0,6,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="仮登録" Height="58" Margin="0,0,5,0" Click="BtnRegister_Click" Background="#FF007ACC" Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="24"/>
+                <Button Grid.Column="1" Content="クリア" Height="58" Margin="5,0,5,0" Click="BtnClear_Click" Background="#FF666666" Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="24"/>
+                <Button Grid.Column="2" Content="検収票印刷" Height="58" Margin="5,0,5,0" Click="BtnPrintReceipt_Click" Background="#FFB36B00" Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="24"/>
+                <Button Grid.Column="3" Content="仕切書印刷" Height="58" Margin="5,0,5,0" Click="BtnPrintShipping_Click" Background="#FF00A651" Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="24"/>
+                <Button Grid.Column="4" Content="販売管理連携" Height="58" Margin="5,0,0,0" Click="BtnSalesManagementLink_Click" Background="#FFD6008F" Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="24"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Top" Margin="40,0,0,4" Width="90" HorizontalAlignment="Left">
+            <TextBlock Text="初期計測重量" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBox x:Name="txtInitialMeasuredWeight" Width="90" TextChanged="TxtInitialMeasuredWeight_TextChanged" HorizontalAlignment="Center"/>
+        </StackPanel>
 
         <DataGrid x:Name="dgvDetails" 
                   AutoGenerateColumns="False"
@@ -63,7 +139,8 @@
                   CanUserResizeRows="False"
                   RowHeaderWidth="0"
                   GridLinesVisibility="All"
-                  FontSize="11"
+                  FontSize="17"
+                  RowHeight="40"
                   Background="White">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No" Binding="{Binding No}" IsReadOnly="True" Width="40"/>
