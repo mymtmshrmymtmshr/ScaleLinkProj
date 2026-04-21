@@ -79,10 +79,9 @@ partial class MeasurementTicketForm
         lblTitle.Dock = DockStyle.Top;
         lblTitle.Font = new Font("メイリオ", 14F, FontStyle.Bold);
         lblTitle.ForeColor = Color.White;
-        lblTitle.Location = new Point(7, 9);
-        lblTitle.Margin = new Padding(6, 0, 6, 0);
+        lblTitle.Location = new Point(4, 4);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new Size(1472, 77);
+        lblTitle.Size = new Size(792, 36);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "＊＊ 計量票入力 ＊＊";
         lblTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -91,10 +90,10 @@ partial class MeasurementTicketForm
         // 
         tlpHeader.BackColor = Color.FromArgb(245, 245, 250);
         tlpHeader.ColumnCount = 5;
-        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 223F));
-        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 223F));
-        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 334F));
-        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 334F));
+        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180F));
+        tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180F));
         tlpHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tlpHeader.Controls.Add(lblColDate, 0, 0);
         tlpHeader.Controls.Add(lblAccDate, 1, 0);
@@ -107,23 +106,21 @@ partial class MeasurementTicketForm
         tlpHeader.Controls.Add(pnlTransType, 3, 1);
         tlpHeader.Controls.Add(txtScaleNo, 4, 1);
         tlpHeader.Dock = DockStyle.Top;
-        tlpHeader.Location = new Point(7, 86);
-        tlpHeader.Margin = new Padding(6, 6, 6, 6);
+        tlpHeader.Location = new Point(4, 40);
         tlpHeader.Name = "tlpHeader";
         tlpHeader.RowCount = 2;
-        tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
-        tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 77F));
-        tlpHeader.Size = new Size(1472, 128);
+        tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+        tlpHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 36F));
+        tlpHeader.Size = new Size(792, 60);
         tlpHeader.TabIndex = 1;
         // 
         // lblColDate
         // 
         lblColDate.Dock = DockStyle.Fill;
         lblColDate.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblColDate.Location = new Point(6, 0);
-        lblColDate.Margin = new Padding(6, 0, 6, 0);
+        lblColDate.Location = new Point(3, 0);
         lblColDate.Name = "lblColDate";
-        lblColDate.Size = new Size(211, 51);
+        lblColDate.Size = new Size(114, 24);
         lblColDate.TabIndex = 0;
         lblColDate.Text = "集計日";
         lblColDate.TextAlign = ContentAlignment.MiddleCenter;
@@ -132,10 +129,9 @@ partial class MeasurementTicketForm
         // 
         lblAccDate.Dock = DockStyle.Fill;
         lblAccDate.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblAccDate.Location = new Point(229, 0);
-        lblAccDate.Margin = new Padding(6, 0, 6, 0);
+        lblAccDate.Location = new Point(123, 0);
         lblAccDate.Name = "lblAccDate";
-        lblAccDate.Size = new Size(211, 51);
+        lblAccDate.Size = new Size(114, 24);
         lblAccDate.TabIndex = 1;
         lblAccDate.Text = "計上日";
         lblAccDate.TextAlign = ContentAlignment.MiddleCenter;
@@ -144,10 +140,9 @@ partial class MeasurementTicketForm
         // 
         lblBranch.Dock = DockStyle.Fill;
         lblBranch.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblBranch.Location = new Point(452, 0);
-        lblBranch.Margin = new Padding(6, 0, 6, 0);
+        lblBranch.Location = new Point(243, 0);
         lblBranch.Name = "lblBranch";
-        lblBranch.Size = new Size(322, 51);
+        lblBranch.Size = new Size(174, 24);
         lblBranch.TabIndex = 2;
         lblBranch.Text = "営業所";
         lblBranch.TextAlign = ContentAlignment.MiddleCenter;
@@ -156,10 +151,9 @@ partial class MeasurementTicketForm
         // 
         lblTransType.Dock = DockStyle.Fill;
         lblTransType.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblTransType.Location = new Point(786, 0);
-        lblTransType.Margin = new Padding(6, 0, 6, 0);
+        lblTransType.Location = new Point(423, 0);
         lblTransType.Name = "lblTransType";
-        lblTransType.Size = new Size(322, 51);
+        lblTransType.Size = new Size(174, 24);
         lblTransType.TabIndex = 3;
         lblTransType.Text = "取引区分";
         lblTransType.TextAlign = ContentAlignment.MiddleCenter;
@@ -168,10 +162,9 @@ partial class MeasurementTicketForm
         // 
         lblScaleNo.Dock = DockStyle.Fill;
         lblScaleNo.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblScaleNo.Location = new Point(1120, 0);
-        lblScaleNo.Margin = new Padding(6, 0, 6, 0);
+        lblScaleNo.Location = new Point(603, 0);
         lblScaleNo.Name = "lblScaleNo";
-        lblScaleNo.Size = new Size(346, 51);
+        lblScaleNo.Size = new Size(186, 24);
         lblScaleNo.TabIndex = 4;
         lblScaleNo.Text = "スケールNo.";
         lblScaleNo.TextAlign = ContentAlignment.MiddleCenter;
@@ -180,20 +173,18 @@ partial class MeasurementTicketForm
         // 
         dtpCollectDate.Dock = DockStyle.Fill;
         dtpCollectDate.Format = DateTimePickerFormat.Short;
-        dtpCollectDate.Location = new Point(6, 57);
-        dtpCollectDate.Margin = new Padding(6, 6, 6, 6);
+        dtpCollectDate.Location = new Point(3, 27);
         dtpCollectDate.Name = "dtpCollectDate";
-        dtpCollectDate.Size = new Size(211, 39);
+        dtpCollectDate.Size = new Size(114, 23);
         dtpCollectDate.TabIndex = 5;
         // 
         // dtpAccountDate
         // 
         dtpAccountDate.Dock = DockStyle.Fill;
         dtpAccountDate.Format = DateTimePickerFormat.Short;
-        dtpAccountDate.Location = new Point(229, 57);
-        dtpAccountDate.Margin = new Padding(6, 6, 6, 6);
+        dtpAccountDate.Location = new Point(123, 27);
         dtpAccountDate.Name = "dtpAccountDate";
-        dtpAccountDate.Size = new Size(211, 39);
+        dtpAccountDate.Size = new Size(114, 23);
         dtpAccountDate.TabIndex = 6;
         // 
         // pnlBranch
@@ -201,20 +192,18 @@ partial class MeasurementTicketForm
         pnlBranch.Controls.Add(lblBranchName);
         pnlBranch.Controls.Add(txtBranchCode);
         pnlBranch.Dock = DockStyle.Fill;
-        pnlBranch.Location = new Point(452, 57);
-        pnlBranch.Margin = new Padding(6, 6, 6, 6);
+        pnlBranch.Location = new Point(243, 27);
         pnlBranch.Name = "pnlBranch";
-        pnlBranch.Size = new Size(322, 65);
+        pnlBranch.Size = new Size(174, 30);
         pnlBranch.TabIndex = 7;
         // 
         // lblBranchName
         // 
         lblBranchName.BackColor = Color.FromArgb(240, 240, 240);
         lblBranchName.Dock = DockStyle.Fill;
-        lblBranchName.Location = new Point(71, 0);
-        lblBranchName.Margin = new Padding(6, 0, 6, 0);
+        lblBranchName.Location = new Point(40, 0);
         lblBranchName.Name = "lblBranchName";
-        lblBranchName.Size = new Size(251, 65);
+        lblBranchName.Size = new Size(134, 30);
         lblBranchName.TabIndex = 0;
         lblBranchName.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -222,9 +211,8 @@ partial class MeasurementTicketForm
         // 
         txtBranchCode.Dock = DockStyle.Left;
         txtBranchCode.Location = new Point(0, 0);
-        txtBranchCode.Margin = new Padding(6, 6, 6, 6);
         txtBranchCode.Name = "txtBranchCode";
-        txtBranchCode.Size = new Size(71, 39);
+        txtBranchCode.Size = new Size(40, 23);
         txtBranchCode.TabIndex = 1;
         // 
         // pnlTransType
@@ -232,20 +220,18 @@ partial class MeasurementTicketForm
         pnlTransType.Controls.Add(lblTransTypeName);
         pnlTransType.Controls.Add(cmbTransType);
         pnlTransType.Dock = DockStyle.Fill;
-        pnlTransType.Location = new Point(786, 57);
-        pnlTransType.Margin = new Padding(6, 6, 6, 6);
+        pnlTransType.Location = new Point(423, 27);
         pnlTransType.Name = "pnlTransType";
-        pnlTransType.Size = new Size(322, 65);
+        pnlTransType.Size = new Size(174, 30);
         pnlTransType.TabIndex = 8;
         // 
         // lblTransTypeName
         // 
         lblTransTypeName.BackColor = Color.FromArgb(240, 240, 240);
         lblTransTypeName.Dock = DockStyle.Fill;
-        lblTransTypeName.Location = new Point(71, 0);
-        lblTransTypeName.Margin = new Padding(6, 0, 6, 0);
+        lblTransTypeName.Location = new Point(40, 0);
         lblTransTypeName.Name = "lblTransTypeName";
-        lblTransTypeName.Size = new Size(251, 65);
+        lblTransTypeName.Size = new Size(134, 30);
         lblTransTypeName.TabIndex = 0;
         lblTransTypeName.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -254,31 +240,29 @@ partial class MeasurementTicketForm
         cmbTransType.Dock = DockStyle.Left;
         cmbTransType.DropDownStyle = ComboBoxStyle.DropDownList;
         cmbTransType.Location = new Point(0, 0);
-        cmbTransType.Margin = new Padding(6, 6, 6, 6);
         cmbTransType.Name = "cmbTransType";
-        cmbTransType.Size = new Size(71, 40);
+        cmbTransType.Size = new Size(40, 23);
         cmbTransType.TabIndex = 1;
         // 
         // txtScaleNo
         // 
         txtScaleNo.BackColor = Color.FromArgb(240, 240, 240);
         txtScaleNo.Dock = DockStyle.Fill;
-        txtScaleNo.Location = new Point(1120, 57);
-        txtScaleNo.Margin = new Padding(6, 6, 6, 6);
+        txtScaleNo.Location = new Point(603, 27);
         txtScaleNo.Name = "txtScaleNo";
         txtScaleNo.ReadOnly = true;
-        txtScaleNo.Size = new Size(346, 39);
+        txtScaleNo.Size = new Size(186, 23);
         txtScaleNo.TabIndex = 9;
         // 
         // tlpSupplier
         // 
         tlpSupplier.BackColor = Color.FromArgb(250, 250, 255);
         tlpSupplier.ColumnCount = 6;
-        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 149F));
-        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 371F));
-        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 297F));
-        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 223F));
-        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 223F));
+        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160F));
+        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+        tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
         tlpSupplier.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tlpSupplier.Controls.Add(lblSupplierHd, 0, 0);
         tlpSupplier.Controls.Add(lblSupplierNameHd, 1, 0);
@@ -293,23 +277,21 @@ partial class MeasurementTicketForm
         tlpSupplier.Controls.Add(pnlPayType, 4, 1);
         tlpSupplier.Controls.Add(txtStaffCode, 5, 1);
         tlpSupplier.Dock = DockStyle.Top;
-        tlpSupplier.Location = new Point(7, 214);
-        tlpSupplier.Margin = new Padding(6, 6, 6, 6);
+        tlpSupplier.Location = new Point(4, 100);
         tlpSupplier.Name = "tlpSupplier";
         tlpSupplier.RowCount = 2;
-        tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
-        tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 77F));
-        tlpSupplier.Size = new Size(1472, 128);
+        tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+        tlpSupplier.RowStyles.Add(new RowStyle(SizeType.Absolute, 36F));
+        tlpSupplier.Size = new Size(792, 60);
         tlpSupplier.TabIndex = 2;
         // 
         // lblSupplierHd
         // 
         lblSupplierHd.Dock = DockStyle.Fill;
         lblSupplierHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblSupplierHd.Location = new Point(6, 0);
-        lblSupplierHd.Margin = new Padding(6, 0, 6, 0);
+        lblSupplierHd.Location = new Point(3, 0);
         lblSupplierHd.Name = "lblSupplierHd";
-        lblSupplierHd.Size = new Size(137, 51);
+        lblSupplierHd.Size = new Size(74, 24);
         lblSupplierHd.TabIndex = 0;
         lblSupplierHd.Text = "取引先";
         lblSupplierHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -318,10 +300,9 @@ partial class MeasurementTicketForm
         // 
         lblSupplierNameHd.Dock = DockStyle.Fill;
         lblSupplierNameHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblSupplierNameHd.Location = new Point(155, 0);
-        lblSupplierNameHd.Margin = new Padding(6, 0, 6, 0);
+        lblSupplierNameHd.Location = new Point(83, 0);
         lblSupplierNameHd.Name = "lblSupplierNameHd";
-        lblSupplierNameHd.Size = new Size(359, 51);
+        lblSupplierNameHd.Size = new Size(194, 24);
         lblSupplierNameHd.TabIndex = 1;
         lblSupplierNameHd.Text = "取引先名";
         lblSupplierNameHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -330,10 +311,9 @@ partial class MeasurementTicketForm
         // 
         lblCarrierHd.Dock = DockStyle.Fill;
         lblCarrierHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblCarrierHd.Location = new Point(526, 0);
-        lblCarrierHd.Margin = new Padding(6, 0, 6, 0);
+        lblCarrierHd.Location = new Point(283, 0);
         lblCarrierHd.Name = "lblCarrierHd";
-        lblCarrierHd.Size = new Size(285, 51);
+        lblCarrierHd.Size = new Size(154, 24);
         lblCarrierHd.TabIndex = 2;
         lblCarrierHd.Text = "運送";
         lblCarrierHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -342,10 +322,9 @@ partial class MeasurementTicketForm
         // 
         lblCarNoHd.Dock = DockStyle.Fill;
         lblCarNoHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblCarNoHd.Location = new Point(823, 0);
-        lblCarNoHd.Margin = new Padding(6, 0, 6, 0);
+        lblCarNoHd.Location = new Point(443, 0);
         lblCarNoHd.Name = "lblCarNoHd";
-        lblCarNoHd.Size = new Size(211, 51);
+        lblCarNoHd.Size = new Size(114, 24);
         lblCarNoHd.TabIndex = 3;
         lblCarNoHd.Text = "車番";
         lblCarNoHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -354,10 +333,9 @@ partial class MeasurementTicketForm
         // 
         lblPayTypeHd.Dock = DockStyle.Fill;
         lblPayTypeHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblPayTypeHd.Location = new Point(1046, 0);
-        lblPayTypeHd.Margin = new Padding(6, 0, 6, 0);
+        lblPayTypeHd.Location = new Point(563, 0);
         lblPayTypeHd.Name = "lblPayTypeHd";
-        lblPayTypeHd.Size = new Size(211, 51);
+        lblPayTypeHd.Size = new Size(114, 24);
         lblPayTypeHd.TabIndex = 4;
         lblPayTypeHd.Text = "支払区分";
         lblPayTypeHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -366,10 +344,9 @@ partial class MeasurementTicketForm
         // 
         lblStaffHd.Dock = DockStyle.Fill;
         lblStaffHd.Font = new Font("メイリオ", 9F, FontStyle.Bold);
-        lblStaffHd.Location = new Point(1269, 0);
-        lblStaffHd.Margin = new Padding(6, 0, 6, 0);
+        lblStaffHd.Location = new Point(683, 0);
         lblStaffHd.Name = "lblStaffHd";
-        lblStaffHd.Size = new Size(197, 51);
+        lblStaffHd.Size = new Size(106, 24);
         lblStaffHd.TabIndex = 5;
         lblStaffHd.Text = "担当";
         lblStaffHd.TextAlign = ContentAlignment.MiddleCenter;
@@ -377,10 +354,9 @@ partial class MeasurementTicketForm
         // txtSupplierCode
         // 
         txtSupplierCode.Dock = DockStyle.Fill;
-        txtSupplierCode.Location = new Point(6, 57);
-        txtSupplierCode.Margin = new Padding(6, 6, 6, 6);
+        txtSupplierCode.Location = new Point(3, 27);
         txtSupplierCode.Name = "txtSupplierCode";
-        txtSupplierCode.Size = new Size(137, 39);
+        txtSupplierCode.Size = new Size(74, 23);
         txtSupplierCode.TabIndex = 6;
         txtSupplierCode.Leave += txtSupplierCode_Leave;
         // 
@@ -388,10 +364,9 @@ partial class MeasurementTicketForm
         // 
         lblSupplierName.BackColor = Color.FromArgb(240, 240, 240);
         lblSupplierName.Dock = DockStyle.Fill;
-        lblSupplierName.Location = new Point(155, 51);
-        lblSupplierName.Margin = new Padding(6, 0, 6, 0);
+        lblSupplierName.Location = new Point(83, 24);
         lblSupplierName.Name = "lblSupplierName";
-        lblSupplierName.Size = new Size(359, 77);
+        lblSupplierName.Size = new Size(194, 36);
         lblSupplierName.TabIndex = 7;
         lblSupplierName.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -400,20 +375,18 @@ partial class MeasurementTicketForm
         pnlCarrier.Controls.Add(lblCarrierName);
         pnlCarrier.Controls.Add(txtCarrierCode);
         pnlCarrier.Dock = DockStyle.Fill;
-        pnlCarrier.Location = new Point(526, 57);
-        pnlCarrier.Margin = new Padding(6, 6, 6, 6);
+        pnlCarrier.Location = new Point(283, 27);
         pnlCarrier.Name = "pnlCarrier";
-        pnlCarrier.Size = new Size(285, 65);
+        pnlCarrier.Size = new Size(154, 30);
         pnlCarrier.TabIndex = 8;
         // 
         // lblCarrierName
         // 
         lblCarrierName.BackColor = Color.FromArgb(240, 240, 240);
         lblCarrierName.Dock = DockStyle.Fill;
-        lblCarrierName.Location = new Point(89, 0);
-        lblCarrierName.Margin = new Padding(6, 0, 6, 0);
+        lblCarrierName.Location = new Point(50, 0);
         lblCarrierName.Name = "lblCarrierName";
-        lblCarrierName.Size = new Size(196, 65);
+        lblCarrierName.Size = new Size(104, 30);
         lblCarrierName.TabIndex = 0;
         lblCarrierName.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -421,18 +394,16 @@ partial class MeasurementTicketForm
         // 
         txtCarrierCode.Dock = DockStyle.Left;
         txtCarrierCode.Location = new Point(0, 0);
-        txtCarrierCode.Margin = new Padding(6, 6, 6, 6);
         txtCarrierCode.Name = "txtCarrierCode";
-        txtCarrierCode.Size = new Size(89, 39);
+        txtCarrierCode.Size = new Size(50, 23);
         txtCarrierCode.TabIndex = 1;
         // 
         // txtCarNo
         // 
         txtCarNo.Dock = DockStyle.Fill;
-        txtCarNo.Location = new Point(823, 57);
-        txtCarNo.Margin = new Padding(6, 6, 6, 6);
+        txtCarNo.Location = new Point(443, 27);
         txtCarNo.Name = "txtCarNo";
-        txtCarNo.Size = new Size(211, 39);
+        txtCarNo.Size = new Size(114, 23);
         txtCarNo.TabIndex = 9;
         // 
         // pnlPayType
@@ -440,20 +411,18 @@ partial class MeasurementTicketForm
         pnlPayType.Controls.Add(lblPaymentTypeName);
         pnlPayType.Controls.Add(cmbPaymentType);
         pnlPayType.Dock = DockStyle.Fill;
-        pnlPayType.Location = new Point(1046, 57);
-        pnlPayType.Margin = new Padding(6, 6, 6, 6);
+        pnlPayType.Location = new Point(563, 27);
         pnlPayType.Name = "pnlPayType";
-        pnlPayType.Size = new Size(211, 65);
+        pnlPayType.Size = new Size(114, 30);
         pnlPayType.TabIndex = 10;
         // 
         // lblPaymentTypeName
         // 
         lblPaymentTypeName.BackColor = Color.FromArgb(240, 240, 240);
         lblPaymentTypeName.Dock = DockStyle.Fill;
-        lblPaymentTypeName.Location = new Point(52, 0);
-        lblPaymentTypeName.Margin = new Padding(6, 0, 6, 0);
+        lblPaymentTypeName.Location = new Point(30, 0);
         lblPaymentTypeName.Name = "lblPaymentTypeName";
-        lblPaymentTypeName.Size = new Size(159, 65);
+        lblPaymentTypeName.Size = new Size(84, 30);
         lblPaymentTypeName.TabIndex = 0;
         lblPaymentTypeName.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -462,18 +431,16 @@ partial class MeasurementTicketForm
         cmbPaymentType.Dock = DockStyle.Left;
         cmbPaymentType.DropDownStyle = ComboBoxStyle.DropDownList;
         cmbPaymentType.Location = new Point(0, 0);
-        cmbPaymentType.Margin = new Padding(6, 6, 6, 6);
         cmbPaymentType.Name = "cmbPaymentType";
-        cmbPaymentType.Size = new Size(52, 40);
+        cmbPaymentType.Size = new Size(30, 23);
         cmbPaymentType.TabIndex = 1;
         // 
         // txtStaffCode
         // 
         txtStaffCode.Dock = DockStyle.Fill;
-        txtStaffCode.Location = new Point(1269, 57);
-        txtStaffCode.Margin = new Padding(6, 6, 6, 6);
+        txtStaffCode.Location = new Point(683, 27);
         txtStaffCode.Name = "txtStaffCode";
-        txtStaffCode.Size = new Size(197, 39);
+        txtStaffCode.Size = new Size(106, 23);
         txtStaffCode.TabIndex = 11;
         // 
         // pnlInitialMeasuredWeight
@@ -482,20 +449,18 @@ partial class MeasurementTicketForm
         pnlInitialMeasuredWeight.Controls.Add(txtInitialMeasuredWeight);
         pnlInitialMeasuredWeight.Controls.Add(lblInitialMeasuredWeight);
         pnlInitialMeasuredWeight.Dock = DockStyle.Top;
-        pnlInitialMeasuredWeight.Location = new Point(7, 342);
-        pnlInitialMeasuredWeight.Margin = new Padding(6, 6, 6, 6);
+        pnlInitialMeasuredWeight.Location = new Point(4, 160);
         pnlInitialMeasuredWeight.Name = "pnlInitialMeasuredWeight";
-        pnlInitialMeasuredWeight.Padding = new Padding(15, 9, 15, 9);
-        pnlInitialMeasuredWeight.Size = new Size(1472, 119);
+        pnlInitialMeasuredWeight.Padding = new Padding(8, 4, 8, 4);
+        pnlInitialMeasuredWeight.Size = new Size(792, 56);
         pnlInitialMeasuredWeight.TabIndex = 3;
         // 
         // txtInitialMeasuredWeight
         // 
         txtInitialMeasuredWeight.Font = new Font("メイリオ", 11F);
-        txtInitialMeasuredWeight.Location = new Point(54, 58);
-        txtInitialMeasuredWeight.Margin = new Padding(6, 6, 6, 6);
+        txtInitialMeasuredWeight.Location = new Point(29, 27);
         txtInitialMeasuredWeight.Name = "txtInitialMeasuredWeight";
-        txtInitialMeasuredWeight.Size = new Size(175, 51);
+        txtInitialMeasuredWeight.Size = new Size(96, 29);
         txtInitialMeasuredWeight.TabIndex = 1;
         txtInitialMeasuredWeight.TextAlign = HorizontalAlignment.Right;
         txtInitialMeasuredWeight.TextChanged += txtInitialMeasuredWeight_TextChanged;
@@ -504,10 +469,9 @@ partial class MeasurementTicketForm
         // 
         // lblInitialMeasuredWeight
         // 
-        lblInitialMeasuredWeight.Location = new Point(54, 9);
-        lblInitialMeasuredWeight.Margin = new Padding(6, 0, 6, 0);
+        lblInitialMeasuredWeight.Location = new Point(29, 4);
         lblInitialMeasuredWeight.Name = "lblInitialMeasuredWeight";
-        lblInitialMeasuredWeight.Size = new Size(178, 43);
+        lblInitialMeasuredWeight.Size = new Size(96, 20);
         lblInitialMeasuredWeight.TabIndex = 0;
         lblInitialMeasuredWeight.Text = "初期計測重量";
         lblInitialMeasuredWeight.TextAlign = ContentAlignment.MiddleCenter;
@@ -521,8 +485,7 @@ partial class MeasurementTicketForm
         dgvDetails.ColumnHeadersHeight = 36;
         dgvDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgvDetails.Dock = DockStyle.Fill;
-        dgvDetails.Location = new Point(7, 461);
-        dgvDetails.Margin = new Padding(6, 6, 6, 6);
+        dgvDetails.Location = new Point(4, 216);
         dgvDetails.MultiSelect = false;
         dgvDetails.Name = "dgvDetails";
         dgvDetails.RowHeadersVisible = false;
@@ -530,7 +493,7 @@ partial class MeasurementTicketForm
         dgvDetails.RowTemplate.Height = 36;
         dgvDetails.ScrollBars = ScrollBars.Vertical;
         dgvDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvDetails.Size = new Size(1472, 1254);
+        dgvDetails.Size = new Size(792, 588);
         dgvDetails.TabIndex = 4;
         // 
         // pnlTotal
@@ -542,49 +505,44 @@ partial class MeasurementTicketForm
         pnlTotal.Controls.Add(lblTotalQuantity);
         pnlTotal.Controls.Add(lblTotalCaption);
         pnlTotal.Dock = DockStyle.Bottom;
-        pnlTotal.Location = new Point(7, 1715);
-        pnlTotal.Margin = new Padding(6, 6, 6, 6);
+        pnlTotal.Location = new Point(4, 804);
         pnlTotal.Name = "pnlTotal";
-        pnlTotal.Size = new Size(1472, 77);
+        pnlTotal.Size = new Size(792, 36);
         pnlTotal.TabIndex = 5;
         // 
         // lblTotalPayment
         // 
         lblTotalPayment.Font = new Font("メイリオ", 10F, FontStyle.Bold);
-        lblTotalPayment.Location = new Point(1096, 0);
-        lblTotalPayment.Margin = new Padding(6, 0, 6, 0);
+        lblTotalPayment.Location = new Point(590, 0);
         lblTotalPayment.Name = "lblTotalPayment";
-        lblTotalPayment.Size = new Size(167, 77);
+        lblTotalPayment.Size = new Size(90, 36);
         lblTotalPayment.TabIndex = 0;
         lblTotalPayment.TextAlign = ContentAlignment.MiddleRight;
         // 
         // lblTotalAmount
         // 
         lblTotalAmount.Font = new Font("メイリオ", 10F, FontStyle.Bold);
-        lblTotalAmount.Location = new Point(919, 0);
-        lblTotalAmount.Margin = new Padding(6, 0, 6, 0);
+        lblTotalAmount.Location = new Point(495, 0);
         lblTotalAmount.Name = "lblTotalAmount";
-        lblTotalAmount.Size = new Size(167, 77);
+        lblTotalAmount.Size = new Size(90, 36);
         lblTotalAmount.TabIndex = 1;
         lblTotalAmount.TextAlign = ContentAlignment.MiddleRight;
         // 
         // lblTotalCount
         // 
         lblTotalCount.Font = new Font("メイリオ", 10F, FontStyle.Bold);
-        lblTotalCount.Location = new Point(669, 0);
-        lblTotalCount.Margin = new Padding(6, 0, 6, 0);
+        lblTotalCount.Location = new Point(360, 0);
         lblTotalCount.Name = "lblTotalCount";
-        lblTotalCount.Size = new Size(111, 77);
+        lblTotalCount.Size = new Size(60, 36);
         lblTotalCount.TabIndex = 2;
         lblTotalCount.TextAlign = ContentAlignment.MiddleRight;
         // 
         // lblTotalQuantity
         // 
         lblTotalQuantity.Font = new Font("メイリオ", 10F, FontStyle.Bold);
-        lblTotalQuantity.Location = new Point(492, 0);
-        lblTotalQuantity.Margin = new Padding(6, 0, 6, 0);
+        lblTotalQuantity.Location = new Point(265, 0);
         lblTotalQuantity.Name = "lblTotalQuantity";
-        lblTotalQuantity.Size = new Size(167, 77);
+        lblTotalQuantity.Size = new Size(90, 36);
         lblTotalQuantity.TabIndex = 3;
         lblTotalQuantity.TextAlign = ContentAlignment.MiddleRight;
         // 
@@ -592,9 +550,8 @@ partial class MeasurementTicketForm
         // 
         lblTotalCaption.Font = new Font("メイリオ", 10F, FontStyle.Bold);
         lblTotalCaption.Location = new Point(0, 0);
-        lblTotalCaption.Margin = new Padding(6, 0, 6, 0);
         lblTotalCaption.Name = "lblTotalCaption";
-        lblTotalCaption.Size = new Size(483, 77);
+        lblTotalCaption.Size = new Size(260, 36);
         lblTotalCaption.TabIndex = 4;
         lblTotalCaption.Text = "【合　計】";
         lblTotalCaption.TextAlign = ContentAlignment.MiddleRight;
@@ -607,10 +564,9 @@ partial class MeasurementTicketForm
         pnlButtons.Controls.Add(btnClear);
         pnlButtons.Controls.Add(btnRegister);
         pnlButtons.Dock = DockStyle.Bottom;
-        pnlButtons.Location = new Point(7, 1792);
-        pnlButtons.Margin = new Padding(6, 6, 6, 6);
+        pnlButtons.Location = new Point(4, 840);
         pnlButtons.Name = "pnlButtons";
-        pnlButtons.Size = new Size(1472, 149);
+        pnlButtons.Size = new Size(792, 70);
         pnlButtons.TabIndex = 6;
         // 
         // btnPrintReceipt
@@ -620,10 +576,9 @@ partial class MeasurementTicketForm
         btnPrintReceipt.FlatStyle = FlatStyle.Flat;
         btnPrintReceipt.Font = new Font("メイリオ", 14F, FontStyle.Bold);
         btnPrintReceipt.ForeColor = Color.White;
-        btnPrintReceipt.Location = new Point(613, 11);
-        btnPrintReceipt.Margin = new Padding(6, 6, 6, 6);
+        btnPrintReceipt.Location = new Point(330, 5);
         btnPrintReceipt.Name = "btnPrintReceipt";
-        btnPrintReceipt.Size = new Size(334, 128);
+        btnPrintReceipt.Size = new Size(180, 60);
         btnPrintReceipt.TabIndex = 0;
         btnPrintReceipt.Text = "検収票印刷";
         btnPrintReceipt.UseVisualStyleBackColor = false;
@@ -636,10 +591,9 @@ partial class MeasurementTicketForm
         btnPrintShipping.FlatStyle = FlatStyle.Flat;
         btnPrintShipping.Font = new Font("メイリオ", 14F, FontStyle.Bold);
         btnPrintShipping.ForeColor = Color.White;
-        btnPrintShipping.Location = new Point(966, 11);
-        btnPrintShipping.Margin = new Padding(6, 6, 6, 6);
+        btnPrintShipping.Location = new Point(520, 5);
         btnPrintShipping.Name = "btnPrintShipping";
-        btnPrintShipping.Size = new Size(334, 128);
+        btnPrintShipping.Size = new Size(180, 60);
         btnPrintShipping.TabIndex = 1;
         btnPrintShipping.Text = "仕切書印刷";
         btnPrintShipping.UseVisualStyleBackColor = false;
@@ -652,10 +606,9 @@ partial class MeasurementTicketForm
         btnClear.FlatStyle = FlatStyle.Flat;
         btnClear.Font = new Font("メイリオ", 14F, FontStyle.Bold);
         btnClear.ForeColor = Color.White;
-        btnClear.Location = new Point(371, 11);
-        btnClear.Margin = new Padding(6, 6, 6, 6);
+        btnClear.Location = new Point(200, 5);
         btnClear.Name = "btnClear";
-        btnClear.Size = new Size(223, 128);
+        btnClear.Size = new Size(120, 60);
         btnClear.TabIndex = 2;
         btnClear.Text = "クリア";
         btnClear.UseVisualStyleBackColor = false;
@@ -668,10 +621,9 @@ partial class MeasurementTicketForm
         btnRegister.FlatStyle = FlatStyle.Flat;
         btnRegister.Font = new Font("メイリオ", 14F, FontStyle.Bold);
         btnRegister.ForeColor = Color.White;
-        btnRegister.Location = new Point(19, 11);
-        btnRegister.Margin = new Padding(6, 6, 6, 6);
+        btnRegister.Location = new Point(10, 5);
         btnRegister.Name = "btnRegister";
-        btnRegister.Size = new Size(334, 128);
+        btnRegister.Size = new Size(180, 60);
         btnRegister.TabIndex = 3;
         btnRegister.Text = "仮登録";
         btnRegister.UseVisualStyleBackColor = false;
@@ -679,10 +631,10 @@ partial class MeasurementTicketForm
         // 
         // MeasurementTicketForm
         // 
-        AutoScaleDimensions = new SizeF(13F, 32F);
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = Color.White;
-        ClientSize = new Size(1486, 1950);
+        ClientSize = new Size(800, 914);
         Controls.Add(dgvDetails);
         Controls.Add(pnlInitialMeasuredWeight);
         Controls.Add(tlpSupplier);
@@ -691,9 +643,8 @@ partial class MeasurementTicketForm
         Controls.Add(pnlTotal);
         Controls.Add(pnlButtons);
         FormBorderStyle = FormBorderStyle.None;
-        Margin = new Padding(6, 6, 6, 6);
         Name = "MeasurementTicketForm";
-        Padding = new Padding(7, 9, 7, 9);
+        Padding = new Padding(4);
         Text = "ｗお";
         tlpHeader.ResumeLayout(false);
         tlpHeader.PerformLayout();

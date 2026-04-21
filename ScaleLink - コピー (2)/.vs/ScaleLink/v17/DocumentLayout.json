@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|m:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\ai\u7528\u8CC7\u6599\\scalelinkproj\\scalelink - \u30B3\u30D4\u30FC (2)\\forms\\measurementticketform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|solutionrelative:forms\\measurementticketform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|m:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\ai\u7528\u8CC7\u6599\\scalelinkproj\\scalelink - \u30B3\u30D4\u30FC (2)\\forms\\measurementticketform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|solutionrelative:forms\\measurementticketform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|m:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\ai\u7528\u8CC7\u6599\\scalelinkproj\\scalelink - \u30B3\u30D4\u30FC (2)\\forms\\measurementticketform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|solutionrelative:forms\\measurementticketform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|m:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\ai\u7528\u8CC7\u6599\\scalelinkproj\\scalelink - \u30B3\u30D4\u30FC (2)\\forms\\measurementticketform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|solutionrelative:forms\\measurementticketform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E6C7C190-0E59-246C-D636-82C7B6D74A5E}|ScaleLink.csproj|m:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\ai\u7528\u8CC7\u6599\\scalelinkproj\\scalelink - \u30B3\u30D4\u30FC (2)\\forms\\measurementticketform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,7 +46,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "MeasurementTicketForm.resx",
+              "DocumentMoniker": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\Forms\\MeasurementTicketForm.resx",
+              "RelativeDocumentMoniker": "Forms\\MeasurementTicketForm.resx",
+              "ToolTip": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\Forms\\MeasurementTicketForm.resx",
+              "RelativeToolTip": "Forms\\MeasurementTicketForm.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2026-04-21T00:01:11.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MeasurementTicketForm.cs",
               "DocumentMoniker": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\Forms\\MeasurementTicketForm.cs",
               "RelativeDocumentMoniker": "Forms\\MeasurementTicketForm.cs",
@@ -55,7 +71,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MeasurementTicketForm.Designer.cs",
               "DocumentMoniker": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\Forms\\MeasurementTicketForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\MeasurementTicketForm.Designer.cs",
@@ -67,7 +83,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MeasurementTicketForm.cs [Design]",
               "DocumentMoniker": "M:\\!!\u30E6\u30FC\u30B6\u30FC\\\u304D-\u5171\u548C\u7D19\u6599\\AI\u7528\u8CC7\u6599\\ScaleLinkProj\\ScaleLink - \u30B3\u30D4\u30FC (2)\\Forms\\MeasurementTicketForm.cs",
               "RelativeDocumentMoniker": "Forms\\MeasurementTicketForm.cs",
