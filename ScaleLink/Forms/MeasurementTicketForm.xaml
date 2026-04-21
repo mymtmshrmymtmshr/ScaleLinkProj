@@ -127,31 +127,38 @@
             </Grid>
         </StackPanel>
 
-        <StackPanel DockPanel.Dock="Top" Margin="40,0,0,4" Width="90" HorizontalAlignment="Left">
-            <TextBlock Text="初期計測重量" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
-            <TextBox x:Name="txtInitialMeasuredWeight" Width="90" TextChanged="TxtInitialMeasuredWeight_TextChanged" HorizontalAlignment="Center"/>
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <DataGrid x:Name="dgvDetails" 
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserResizeRows="False"
-                  RowHeaderWidth="0"
-                  GridLinesVisibility="All"
-                  FontSize="17"
-                  Background="White">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="No" Binding="{Binding No}" IsReadOnly="True" Width="40"/>
-                <DataGridTextColumn Header="計測重量" Binding="{Binding MeasuredWeightText}" Width="90"/>
-                <DataGridTextColumn Header="コード" Binding="{Binding Code}" Width="60"/>
-                <DataGridTextColumn Header="品名" Binding="{Binding ProductName}" IsReadOnly="True" Width="150"/>
-                <DataGridTextColumn Header="数量" Binding="{Binding QuantityText}" IsReadOnly="True" Width="90"/>
-                <DataGridTextColumn Header="本数" Binding="{Binding CountText}" Width="60"/>
-                <DataGridTextColumn Header="単価" Binding="{Binding UnitPriceText}" Width="75"/>
-                <DataGridTextColumn Header="金額" Binding="{Binding AmountText}" IsReadOnly="True" Width="90"/>
-                <DataGridTextColumn Header="支払額" Binding="{Binding PaymentText}" IsReadOnly="True" Width="90"/>
-            </DataGrid.Columns>
-        </DataGrid>
+            <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" Margin="40,0,0,2">
+                <TextBlock Text="初期計測重量" Margin="0,0,0,2" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBox x:Name="txtInitialMeasuredWeight" Width="90" TextChanged="TxtInitialMeasuredWeight_TextChanged" HorizontalAlignment="Left"/>
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" x:Name="dgvDetails" 
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      RowHeaderWidth="0"
+                      GridLinesVisibility="All"
+                      FontSize="20"
+                      Background="White">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="No" Binding="{Binding No}" IsReadOnly="True" Width="40"/>
+                    <DataGridTextColumn Header="計測重量" Binding="{Binding MeasuredWeightText}" Width="90"/>
+                    <DataGridTextColumn Header="コード" Binding="{Binding Code}" Width="60"/>
+                    <DataGridTextColumn Header="品名" Binding="{Binding ProductName}" IsReadOnly="True" Width="150"/>
+                    <DataGridTextColumn Header="数量" Binding="{Binding QuantityText}" IsReadOnly="True" Width="90"/>
+                    <DataGridTextColumn Header="本数" Binding="{Binding CountText}" Width="60"/>
+                    <DataGridTextColumn Header="単価" Binding="{Binding UnitPriceText}" Width="75"/>
+                    <DataGridTextColumn Header="金額" Binding="{Binding AmountText}" IsReadOnly="True" Width="90"/>
+                    <DataGridTextColumn Header="支払額" Binding="{Binding PaymentText}" IsReadOnly="True" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </DockPanel>
 </UserControl>
