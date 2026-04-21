@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace ScaleLink.Forms;
 
@@ -33,5 +34,11 @@ public partial class ShippingDocumentPreviewDialog : Window
         {
             MessageBox.Show($"印刷エラー:\n{ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void BtnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+        Close();
     }
 }

@@ -11,18 +11,18 @@ public partial class ReceiptPreviewDialog : Window
     public ReceiptPreviewDialog(DrawingImage receiptImage)
     {
         InitializeComponent();
-        imgPreview.Source = ToBitmapSource(receiptImage);
+        //imgPreview.Source = ToBitmapSource(receiptImage);
     }
 
     public ReceiptPreviewDialog(string imageFilePath)
     {
         InitializeComponent();
 
-        if (!File.Exists(imageFilePath))
-            throw new FileNotFoundException("Image file not found.", imageFilePath);
+        //if (!File.Exists(imageFilePath))
+        //    throw new FileNotFoundException("Image file not found.", imageFilePath);
 
-        using var img = DrawingImage.FromFile(imageFilePath);
-        imgPreview.Source = ToBitmapSource((DrawingImage)img.Clone());
+        //using var img = DrawingImage.FromFile(imageFilePath);
+        //imgPreview.Source = ToBitmapSource((DrawingImage)img.Clone());
     }
 
     private void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -32,6 +32,12 @@ public partial class ReceiptPreviewDialog : Window
             return;
 
         dialog.PrintVisual(imgPreview, "Receipt");
+    }
+
+    private void BtnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+        Close();
     }
 
     private static BitmapSource ToBitmapSource(DrawingImage image)

@@ -3,18 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="仕切書プレビュー" 
         Width="900" 
-        Height="700"
-        WindowStartupLocation="CenterOwner">
+        Height="1092"
+        WindowStartupLocation="CenterOwner" WindowState="Maximized">
     <DockPanel Margin="10">
-        <Button Content="印刷" 
-                DockPanel.Dock="Bottom"
-                Width="100" 
-                HorizontalAlignment="Right" 
-                Margin="0,8,0,0"
-                Click="BtnPrint_Click"/>
+        <StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0">
+            <Button Content="印刷"
+                    Width="100"
+                    Margin="0,0,4,0"
+                    Background="#2196F3"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnPrint_Click" FontSize="20"/>
+            <Button Content="キャンセル"
+                    Width="100"
+                    Background="#9E9E9E"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnCancel_Click" Height="35" FontSize="20"/>
+        </StackPanel>
 
         <ScrollViewer>
-            <Image x:Name="picPreview" Stretch="Uniform"/>
+            <Image x:Name="picPreview" Stretch="None" Source="/Forms/仕切書.jpg"/>
         </ScrollViewer>
     </DockPanel>
 </Window>
