@@ -48,7 +48,7 @@
                 x:Name="btnConfirmWeight" 
                 Content="重量確定" 
                 Height="55" 
-                FontSize="12" 
+                FontSize="40" 
                 FontWeight="Bold" 
                 Background="#FF00C8FF"
                 Foreground="White"
